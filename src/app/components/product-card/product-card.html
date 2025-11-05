@@ -1,0 +1,38 @@
+<!-- src/app/components/product-card/product-card.html -->
+<article class="product-card" aria-live="polite">
+  <!-- Cabecera visual -->
+  @if (producto().imageUrl) {
+    <img
+      [src]="producto().imageUrl!"
+      [alt]="producto().name"
+      class="product-card__img" />
+  }
+
+  <header class="product-card__header">
+        <!-- Dos ítems: destacado y descuento/happy hour -->
+    <div class="product-card__flags" role="group" aria-label="Estado del producto">
+      @if (esHappyHour()) {
+        <span class="flag flag--destacado" aria-label="En Happy Hour">En Happy Hour!</span>
+      }
+      @if (tieneDescuentoOHh()) {
+        <span class="flag flag--descuento" aria-label="Descuento">
+          Descuento
+        </span>
+      }
+    </div>
+    <h3 class="product-card__title">{{ producto().name }}</h3>
+  </header>
+
+<p class="product-card__desc">{{ producto().description  }}</p>
+
+  <div class="product-card__precio" aria-label="Precio">
+    @if (tieneDescuentoOHh() && producto().isDiscount) {
+      <!-- Muestra precio base y precio con descuento -->
+      <span class="precio precio--base">{{ producto().price | currency:'ARS' }}</span>
+      <span class="precio precio--actual">{{ precioActual() | currency:'ARS' }}</span>
+    } @else {
+      <span class="precio precio--actual">{{ producto().price | currency:'ARS' }}</span>
+    }
+  </div>
+
+</article>

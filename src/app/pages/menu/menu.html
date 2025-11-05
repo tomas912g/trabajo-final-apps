@@ -1,24 +1,21 @@
 <header class="main-header">
+    <h1> Menu del restaurante ID</h1>
+    <div>
+        @if (isLoading){
+            <div class="spinner-area">
+                <app-spinner></app-spinner>
+            </div>
+          }
+    </div>
+</header>
     <nav class="navbar">
         <div class="nav-brand">
-            <a routerLink="/" class="logo-link">
+            <a routerLink="/menu" class="logo-link">
                 <span class="app-name">🍽️ Menú Digital</span>
             </a>
         </div>
-
-        <div class="search-area">
-            <input type="text" placeholder="Buscar restaurantes...">
-            <button>🔎</button>
-        </div>
-
-        <div class="nav-links">
-            
-            <a routerLink="/restaurantes" class="nav-link">Ver Restaurantes</a>
-            
-            <a routerLink="/login" class="nav-link login-btn">Soy Dueño | Iniciar Sesión</a>
-            
+@@ -20,5 +29,4 @@
             <a routerLink="/register" class="nav-link register-btn">Regístrate</a>
         </div>
 
-        </nav>
-</header>
+</nav>

@@ -5,6 +5,7 @@ import { Menu } from './pages/menu/menu';
 import { Register } from './pages/register/register';
 import { publicCostumerGuard } from './guard/only-public-costumer-guard';
 
+
 export const routes: Routes = [
     {
         path: "login",
