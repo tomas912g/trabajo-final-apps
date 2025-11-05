@@ -1,1 +1,78 @@
-<p>register works!</p>
+<div class="card auth-box">
+    <h1 class="form-title">Crear Cuenta</h1>
+
+    <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="register-form-content">
+    <div class="form-item">
+        <label for="email">Correo electrónico</label>
+        <input id="email" name="email" type="email" ngModel required email #email="ngModel" autocomplete="email" class="input-text">
+    
+        @if (email.invalid && !email.pristine) {
+        @if (email.errors?.['required']) {
+            <span class="text-error">El correo es obligatorio.</span>
+        }
+        @if (email.errors?.['email']) {
+            <span class="text-error">Ingrese un formato de correo válido.</span>
+        }
+    }
+    </div>
+
+    <div class="form-item">
+        <label for="nombreRestaurante">Nombre del restaurante</label>
+        <input id="nombreRestaurante" name="nombreRestaurante" type="text" ngModel required nombreRestaurante #nombreRestaurante="ngModel" autocomplete="nombreRestaurante" class="input-text">
+    
+        @if (nombreRestaurante.dirty || nombreRestaurante.touched) {
+        @if (nombreRestaurante.errors?.['required']) {
+            <span class="text-error">El nombre del Restaurante es obligatorio.</span>
+        }
+    }
+    </div>
+
+    <div class="form-item">
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" ngModel required minlength="4" #password="ngModel" autocomplete="new-password" class="input-text">
+    @if (password.invalid && !password.pristine) {
+            @if (password.errors?.['required']) {
+            <span class="text-error">La contraseña es obligatoria.</span>
+            }
+            @if (password.errors?.['minlength']) {
+            <span class="text-error">Debe tener al menos 4 caracteres.</span>
+            }
+    }
+    </div>
+
+
+    <div class="form-item">
+        <label for="password2">Repite la contraseña</label>
+        <input id="password2" name="password2" type="password" ngModel required #password2="ngModel" autocomplete="new-password" class="input-text">
+    @if (password2.invalid && !password2.pristine) {
+            @if (password2.errors?.['required']) {
+            <span class="text-error">Debes repetir la contraseña.</span>
+            }
+        }
+        @if (!password2.pristine && password.value !== password2.value && !password2.errors?.['required']) {
+            <span class="text-error">Las contraseñas no coinciden.</span>
+        }
+    </div>
+
+    <div class="form-actions">
+    <button type="submit" [disabled]="isLoading || registerForm.invalid" class="button button-main button-full">
+        <span>Registrarse</span>
+    </button>
+</div>
+
+    @if(isLoading){
+    <div class="spinner-area">
+        <app-spinner></app-spinner>
+    </div>
+    }
+
+    @if (errorRegister) {
+    <span class="text-error general-form-error">Error al registrar. Por favor, intente nuevamente.</span>
+    } 
+
+    <div class="form-footer">
+            <span class="footer-text">¿Ya tenés cuenta?</span>
+            <a routerLink="/login" class="footer-link">Inicia sesión</a>
+    </div>
+    </form>
+</div>

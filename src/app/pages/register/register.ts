@@ -3,10 +3,11 @@ import { FormsModule,  NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NewUser } from '../../interfaces/user';
 import { UsersService } from '../../services/users-service';
+import { Spinner } from '../../components/spinner/spinner';
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, FormsModule],
+  imports: [RouterModule, FormsModule, Spinner],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
