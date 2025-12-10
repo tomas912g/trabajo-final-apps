@@ -1,15 +1,14 @@
 import { Routes } from '@angular/router';
-import { Login } from './pages/login/login';
+import { LoginPage } from './pages/login/login';
 import { RestaurantList } from './pages/restaurant-list/restaurant-list';
 import { Menu } from './pages/menu/menu';
 import { Register } from './pages/register/register';
-import { publicCostumerGuard } from './guard/only-public-costumer-guard';
-
+import { publicCostumerGuard } from './guard/only-public-customer-guard-guard';
 
 export const routes: Routes = [
     {
         path: "login",
-        component: Login,
+        component: LoginPage,
         canActivate: [publicCostumerGuard]
     },
     {

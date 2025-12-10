@@ -1,0 +1,29 @@
+<div class="product-detail-overlay">
+    <article class="product-detail-card" (click)="preventClose($event)">
+        <button class="close-boton" (click)="onClose()">
+            &times;
+        </button>
+    @if (product().imageUrl) {
+        <div class="image-container">
+        <img src="product().imageURL" 
+        alt="product().name">>
+        </div>
+        }
+    <div class="product-detail-info">
+        <h2 class="product-detail-title">{{product().name}}</h2>
+        <p class="product-detail-description">{{product().description}}</p>
+        <div class="product-detail-price">
+            @if (tieneDescuentoOHh() && product().isDiscount) {
+                <span class="precio-viejo">
+                {{ product().price | currency:'ARS':'symbol':'1.0-0' }}
+                </span>
+                <span class="precio-nuevo">
+                {{ precioActual() | currency:'ARS':'symbol':'1.0-0' }}
+                </span>
+            } @else {
+                <span>{{ product().price | currency:'ARS':'symbol':'1.0-0' }}</span>
+            }
+        </div>
+    </div>
+    </article>
+</div>

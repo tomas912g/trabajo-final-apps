@@ -1,12 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, OnInit,} from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductsService } from '../../services/products-service';
-import { Product } from '../../Interface/product';
+import { Product } from '../../interfaces/product';
 import { Spinner } from '../../components/spinner/spinner';
+import { ProductCard } from '../../components/product-card/product-card';
+import { ProductDetailModal } from '../../components/product-detail-modal/product-detail-modal';
 
 @Component({
   selector: 'app-menu',
-  imports: [Spinner],
+  imports: [Spinner, ProductCard, ProductDetailModal, RouterLink],
   templateUrl: './menu.html',
   styleUrl: './menu.scss',
 })
@@ -18,7 +20,8 @@ export class Menu implements OnInit{
   restaurantId! : number; //para almacenar el ID numerico, previamente al constructor
   menu: Product[]= []; //array de productos
   isLoading : boolean = true; //mostrar spinner de carga
-  
+
+  selectedProduct: Product | null = null; //producto seleccionado para ver detalle
   //variables de Estado para el filtrado
   currentCategoryId: number | undefined = undefined; // Guarda la categoría seleccionada por el usuario
   currentIsDiscount: boolean = false; //Guarda si el usuario ha activado el filtro de ofertas
@@ -63,4 +66,11 @@ export class Menu implements OnInit{
         this.isLoading = false;
       }
     }
+  
+  openModal(product: Product){
+    this.selectedProduct = product;
+  }
+  closeModal(){
+    this.selectedProduct = null;
+  }
 }

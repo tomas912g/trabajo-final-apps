@@ -1,12 +1,5 @@
 <header class="main-header">
-    <h1> Menu del restaurante ID</h1>
-    <div>
-        @if (isLoading){
-            <div class="spinner-area">
-                <app-spinner></app-spinner>
-            </div>
-          }
-    </div>
+    <h1> Menu del restaurante ID: {{ restaurantId }}</h1>
 </header>
     <nav class="navbar">
         <div class="nav-brand">
@@ -14,8 +7,32 @@
                 <span class="app-name">🍽️ Menú Digital</span>
             </a>
         </div>
-@@ -20,5 +29,4 @@
+        <div>
             <a routerLink="/register" class="nav-link register-btn">Regístrate</a>
         </div>
+    </nav>
+<main class="menu-container">
+    @if (isLoading){
+        <div class="spinner-area">
+            <app-spinner></app-spinner>
+        </div>
+    } @else {
+    <div class="products-list">
+      @for (item of menu; track item.id) {
+        <app-product-card 
+          [product]="item" 
+          (viewDetail)="openModal($event)">
+        </app-product-card>
+      } @empty {
+        <p>No se encontraron productos.</p>
+      }
+    </div>
+  }
+</main>
 
-</nav>
+@if (selectedProduct) {
+  <app-product-detail-modal 
+    [product]="selectedProduct!" 
+    (close)="closeModal()">
+  </app-product-detail-modal>
+}

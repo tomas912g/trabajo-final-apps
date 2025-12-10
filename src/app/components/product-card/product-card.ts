@@ -1,31 +1,31 @@
-import { CommonModule } from '@angular/common';
+import { CurrencyPipe, CommonModule } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CurrencyPipe],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss',
 })
 export class ProductCard {
   // Producto a mostrar
-  producto = input.required<Product>();
+  product = input.required<Product>();
 
   // Opcional: para cerrar si lo usás dentro de un modal
-  close = output<void>();
-
+  viewDetail = output<Product>();
   // Flags derivados
-  readonly esDestacado = computed(() => !!this.producto().isFeatured);
-  readonly esHappyHour = computed(() => !!this.producto().isHappyHour);
+  readonly esDestacado = computed(() => !!this.product().isFeatured);
+  readonly esHappyHour = computed(() => !!this.product().isHappyHour);
+
   readonly tieneDescuentoOHh = computed(
-    () => this.esHappyHour() || this.#porcentaje(this.producto().isDiscount) > 0
+    () => this.esHappyHour() || this.#porcentaje(this.product().isDiscount) > 0
   );
 
   // Precio actual aplicando solo el porcentaje isDiscount (0..100)
   readonly precioActual = computed(() => {
-    const p = this.producto();
+    const p = this.product();
     const porc = this.#porcentaje(p.isDiscount);
     if (porc > 0) {
       const precio = p.price * (1 - porc / 100);
@@ -34,8 +34,8 @@ export class ProductCard {
     return p.price;
   });
 
-  onClose() {
-    this.close.emit();
+ verDetalle() {
+    this.viewDetail.emit(this.product());
   }
 
   // ---- helpers privados ----
