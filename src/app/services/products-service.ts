@@ -16,14 +16,14 @@ export class ProductsService {
 
     let res = `${this.URL_BASE}/users/${userId}/products`; //defino la URL
 
-    const params = new URLSearchParams(); // Creo contenedor para clave-valor
+    let params = new HttpParams(); // Creo contenedor para clave-valor
     
     //filtros
     if(categoryId){ //solo añadimos los parametros si tienen valor
-      params.set('categoryId', categoryId.toString());
+      params = params.set('categoryId', categoryId.toString());
     }
     if(isDiscount){
-      params.set('discounted', 'true');
+      params = params.set('discounted', 'true');
     }
     // obtener la cadena de filtros
     const products = params.toString();
@@ -32,7 +32,7 @@ export class ProductsService {
     if (products){
       res += `${products}`;
     }
-    const product = this.http.get<Product[]>(res); // realizar peticion con la URL construida
+    const product = this.http.get<Product[]>(res, { params }); // realizar peticion con la URL construida
 
     return lastValueFrom(product) //convertir a promesa para await
   }
