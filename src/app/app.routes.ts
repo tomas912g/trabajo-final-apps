@@ -7,6 +7,11 @@ import { publicCostumerGuard } from './guard/only-public-customer-guard-guard';
 
 export const routes: Routes = [
     {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
+    },
+    {
         path: "login",
         component: LoginPage,
         canActivate: [publicCostumerGuard]
@@ -17,13 +22,11 @@ export const routes: Routes = [
         canActivate: [publicCostumerGuard]
     },
     {
-        path: "menu",
+        path: "menu/:userId",
         component: Menu,
-        canActivate: [publicCostumerGuard]
     },
     {
         path: "restaurantList",
         component: RestaurantList,
-        canActivate: [publicCostumerGuard]
     }
 ];
