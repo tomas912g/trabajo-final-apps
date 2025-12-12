@@ -1,1 +1,58 @@
-<p>restaurant-list works!</p>
+<div class="container mt-5 mb-5">
+    
+    <h1 class="text-3xl fw-bold text-center mb-5">Restaurantes Disponibles</h1>
+
+    @if (restaurants$ | async; as restaurants) { 
+        <!-- se suscribe al observable del servicio. Si este emite un valor la condicion es verdadera, sino no
+         "as" guarda el array de datos del Obv. en la variabel local restaurants-->
+        
+         <!--Si la lista NO tiene elementos, muestra el mensaje de vacio-->
+        @if (restaurants.length === 0) {
+            <div class="alert alert-info text-center py-4" role="alert">
+                Aún no hay restaurantes registrados.
+            </div>
+        } 
+        
+        <!--Si la lista TIENE elementos-->
+        @if (restaurants.length > 0) {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+                @for (rest of restaurants; track rest.id) { 
+                    <div class="col">
+                        
+                        <div class="card h-100 shadow border-0 hover-lift">
+
+                            <img [src]="rest.image || 'https://'" 
+                                 [alt]="rest.name" 
+                                 [style.height.px]="200" 
+                                 [style.object-fit]="'cover'"
+                                 class="card-img-top">
+                            
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">{{ rest.name }}</h5>
+                                <p class="card-text text-muted mb-3">{{ rest.address }}</p>
+                                <span class="badge bg-warning text-dark">{{ rest.category }}</span>
+                            </div>
+                            
+                            <div class="card-footer bg-light border-0">
+                                <!-- Enlace al Menú (routerLink con sintaxis de string simple) -->
+                                <a routerLink="/menu/{{ rest.id }}" class="btn btn-primary w-100">
+                                    Ver Menú
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+           
+    } @else {
+        <!-- Bloque @else: Se muestra mientras los datos están cargando (mientras el async pipe espera) -->
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-secondary mt-2">Cargando la lista de restaurantes...</p>
+        </div>
+    }
+</div>
