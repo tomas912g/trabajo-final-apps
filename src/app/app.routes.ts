@@ -4,6 +4,8 @@ import { RestaurantList } from './pages/restaurant-list/restaurant-list';
 import { Menu } from './pages/menu/menu';
 import { Register } from './pages/register/register';
 import { publicCostumerGuard } from './guard/only-public-customer-guard-guard';
+import { AccountSettingsComponent } from './pages/account-settings/account-settings';
+import { onlyLoggedCostumerGuard } from './guard/only-logged-customer-guard-guard';
 
 export const routes: Routes = [
     {
@@ -28,5 +30,10 @@ export const routes: Routes = [
     {
         path: "restaurantList",
         component: RestaurantList,
+    },
+    {
+        path: "perfil",
+        component: AccountSettingsComponent,
+        canActivate: [onlyLoggedCostumerGuard]
     }
 ];

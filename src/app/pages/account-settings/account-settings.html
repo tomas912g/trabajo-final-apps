@@ -1,0 +1,44 @@
+<main class="container">
+  <h2>Configuración de la cuenta</h2>
+
+  @if (isLoading) {
+    <p>Cargando datos del perfil...</p>
+  } 
+  @else {
+    <form [formGroup]="editForm" (ngSubmit)="onUpdateAccount()">
+      
+      <div class="form-group">
+        <label for="email">Email (No modificable)</label>
+        <input id="email" type="email" [value]="user?.email" disabled class="form-control-disabled">
+      </div>
+      
+      <div class="form-group">
+        <label for="restaurant">Nombre del Restaurante</label>
+        <input id="restaurant" type="text" formControlName="restaurant" required>
+        @if (editForm.get('restaurant')?.invalid && editForm.get('restaurant')?.touched) {
+          <div class="error-message">El nombre del restaurante es obligatorio.</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="address">Dirección</label>
+        <input id="address" type="text" formControlName="address" required>
+      </div>
+
+      <div class="form-group">
+        <label for="newPassword">Cambiar Contraseña (Dejar vacío para mantener la actual)</label>
+        <input id="newPassword" type="password" formControlName="newPassword">
+      </div>
+                                        
+      <button type="submit" [disabled]="editForm.invalid" class="btn btn-primary"> //deshabilita el boton si un campo requerido no se completo 
+        Guardar Cambios
+      </button>
+    </form>
+    
+    <hr>
+    
+    <button (click)="onDeleteAccount()" class="btn btn-danger">
+      Eliminar cuenta
+    </button>
+  }
+</main>
