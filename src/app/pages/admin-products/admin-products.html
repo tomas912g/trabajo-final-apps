@@ -1,0 +1,48 @@
+<div class="container p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Mis Productos</h2>
+        <a routerLink="/admin/product/new" class="btn btn-success">
+        + Agregar Producto</a>
+    </div>
+    @if (isloading) {
+    <p>Cargando...</p>
+  } @else { 
+    <div class="list-group">
+    @for (item of myProduct; track item.id) {
+        <div class="list-group-item p-3 shadow-sm mb-3 border rounded">
+            <div class="d-flex justify-content-between">
+                <h4 class="mb-1">{{ item.name }}</h4>
+                <span class="badge bg-primary fs-6">${{ item.price }}</span>
+            </div>
+            <p class="text-muted mb-2">{{ item.description }}</p>
+
+        <div class="d-flex flex-wrap gap-3 align-items-end">
+            <button
+            class="btn btn-sm"
+            [class.btn-warning]="item.isHappyHour"
+            [class.btn-outline-secondary]="!item.isHappyHour"
+            (click)="cambiarHappyHour(item)">
+            Happy Hour: {{ item.isHappyHour ? 'En Happy Hour' : 'Fuera de Happy Hour' }}
+        </button>
+        <div class="input-group input-group-sm" style="width: 180px;">
+            <span class="input-group-text">Descuento %</span>
+            <input type="number" class="form-control" [value]="item.isDiscount" #discountInput>
+            <button class="btn btn-outline-primary" (click)="cambiarDescuento(item.id, discountInput.value)">
+                OK
+            </button>
+        </div>
+        <div class="ms-auto d-flex gap-2">
+            <a [routerLink]="['/admin/product/edit', item.id]" class="btn btn-sm btn-info text-white">
+                Editar Producto
+            </a>
+            <button class="btn btn-sm btn-danger" (click)="borrarProducto(item.id)">
+            Eliminar Producto
+              </button>
+        </div>
+
+    </div>
+  </div>
+}
+  </div>
+  }
+</div>

@@ -11,6 +11,17 @@ export class AuthService {
   token: null|string = localStorage.getItem("token");
   revisionTokenInterval:number|undefined;
 
+  get currentUserId(): number | null {
+    if (!this.token) return null;
+    try {
+      const payload = this.parseJwt(this.token);
+      return Number(payload.id || payload.sub || payload.userId);
+    } catch (error) {
+      console.error("Error al leer ID:", error);
+      return null;
+    }
+  }
+
   ngOnInit(): void{
     //si tengo sesion iniciado verifico que no este vencida
     if(this.token){
