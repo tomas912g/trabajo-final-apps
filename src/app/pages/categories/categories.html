@@ -1,0 +1,41 @@
+<div class="card p-4">
+  @if (isEditMode) {
+    <h4>Editar Categoría</h4>
+  } @else {
+    <h4>Crear Nueva Categoría</h4>
+  }
+
+  <form (ngSubmit)="onSubmit()">
+    
+    <div class="mb-3">
+      <label for="name" class="form-label">Nombre:</label>
+      <input 
+        type="text" 
+        id="name" 
+        class="form-control" 
+        name="name" 
+        [(ngModel)]="categoryData.name" 
+        required
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Descripción:</label>
+      <textarea 
+        id="description" 
+        class="form-control" 
+        name="description" 
+        [(ngModel)]="categoryData.description"
+        required
+      ></textarea> <!-- campo de entrada para texto multilínea -->
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      @if (isEditMode) {
+        <span>Guardar Cambios</span>
+      } @else {
+        <span>Crear Categoría</span>
+      }
+    </button>
+  </form>
+</div>
