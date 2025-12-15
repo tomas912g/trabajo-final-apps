@@ -37,9 +37,9 @@ export class Register {
   try {
     // Generamos un email ficticio único para que el servidor en ferozo.com lo acepte
     const randomId = Date.now(); 
-    const fakeEmail = `${firstName}.${lastName}.${randomId}@sin-email.com`
-                      .toLowerCase()
-                      .replace(/\s+/g, ''); // Quitamos espacios si los hay
+    const cleanName = restaurantName.toLowerCase().replace(/\s+/g, '');
+    const fakeEmail = `${cleanName}@sin-email.com`
+                  
     const payload: NewUser = { firstName, lastName, email: fakeEmail, password, restaurantName, address, phoneNumber };
     console.log("enviando payload", payload);
     const res = await this.usersService.register(payload);
