@@ -54,6 +54,6 @@ async updateCategory(id: number, categoryData: Category): Promise<any> {
 async deleteCategory(id: number): Promise<void> {
     const url = `${this.baseUrl}/categories/${id}`; 
   const headers = this.getHeaders();
-    await firstValueFrom(this.http.delete<void>(url, { headers }));
+    await firstValueFrom(this.http.delete<void>(url, { headers }));
     }
 }

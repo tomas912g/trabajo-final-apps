@@ -3,9 +3,9 @@
 
   <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
   <div>
-    <label for="nombreRestaurante">Nombre del Restaurante</label>
-    <input id="nombreRestaurante" name="nombreRestaurante" type="text" ngModel required nombreRestaurante #nombreRestaurante="ngModel" required="true" autocomplete="nombreRestaurante" class="">
-    @if (nombreRestaurante.dirty || nombreRestaurante.touched){
+    <label for="restaurantName">Nombre del Restaurante</label>
+    <input id="restaurantName" name="restaurantName" type="text" ngModel required restaurantName #restaurantName="ngModel" required="true" autocomplete="restaurantName" class="">
+    @if (restaurantName.dirty || restaurantName.touched){
         <p class="error">Nombre no encontrado</p>
     } 
   </div>

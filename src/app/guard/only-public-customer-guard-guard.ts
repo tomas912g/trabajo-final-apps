@@ -6,8 +6,8 @@ export const publicCostumerGuard: CanActivateFn = (route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    if(!authService.token){
-      const newPath = router.parseUrl("/menu");
+    if(authService.token){
+      const newPath = router.parseUrl("/restaurantList");
       return new RedirectCommand(newPath, {
         skipLocationChange: true,
       });

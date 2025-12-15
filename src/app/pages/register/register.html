@@ -3,25 +3,11 @@
 
     <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="register-form-content">
     <div class="form-item">
-        <label for="email">Correo electrónico</label>
-        <input id="email" name="email" type="email" ngModel required email #email="ngModel" autocomplete="email" class="input-text">
+        <label for="restaurantName">Nombre del restaurante</label>
+        <input id="restaurantName" name="restaurantName" type="text" ngModel required restaurantName #restaurantName="ngModel" autocomplete="restaurantName" class="input-text">
     
-        @if (email.invalid && !email.pristine) {
-        @if (email.errors?.['required']) {
-            <span class="text-error">El correo es obligatorio.</span>
-        }
-        @if (email.errors?.['email']) {
-            <span class="text-error">Ingrese un formato de correo válido.</span>
-        }
-    }
-    </div>
-
-    <div class="form-item">
-        <label for="nombreRestaurante">Nombre del restaurante</label>
-        <input id="nombreRestaurante" name="nombreRestaurante" type="text" ngModel required nombreRestaurante #nombreRestaurante="ngModel" autocomplete="nombreRestaurante" class="input-text">
-    
-        @if (nombreRestaurante.dirty || nombreRestaurante.touched) {
-        @if (nombreRestaurante.errors?.['required']) {
+@if (restaurantName.dirty || restaurantName.touched) {
+        @if (restaurantName.errors?.['required']) {
             <span class="text-error">El nombre del Restaurante es obligatorio.</span>
         }
     }

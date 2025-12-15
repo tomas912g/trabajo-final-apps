@@ -30,7 +30,7 @@ export class AuthService {
   }
   
   async login(loginData: logindata){
-    const res = await fetch("",
+    const res = await fetch("https://w370351.ferozo.com/api/Authentication/login",
     {
       method: "POST",
       headers: {'Content-Type': 'application/json'},

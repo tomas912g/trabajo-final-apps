@@ -9,7 +9,7 @@ import { Restaurant } from '../interfaces/restaurants';
 export class RestaurantService {
   http = inject(HttpClient); // -> para hacer peticiones a la web
 
-  readonly URL_BASE = "https://restaurant-api.somee.com/api ENDPOINT GET"; //obtiene los restaurantes registrados
+  readonly URL_BASE = "https://w370351.ferozo.com/api/users"; //obtiene los restaurantes registrados
 
   getRestaurants(): Observable<Restaurant[]> { 
     return this.http.get<Restaurant[]>(this.URL_BASE);//peticion sin token ya que no es publica
