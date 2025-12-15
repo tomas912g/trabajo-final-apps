@@ -3,10 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../services/products-service';
 import { Product } from '../../interfaces/product';
 import { Spinner } from '../../components/spinner/spinner';
+import { ProductCard } from '../../components/product-card/product-card';
+import { ProductDetailModal } from '../../components/product-detail-modal/product-detail-modal';
 
 @Component({
   selector: 'app-menu',
-  imports: [Spinner],
+  imports: [Spinner, ProductCard, ProductDetailModal],
   templateUrl: './menu.html',
   styleUrl: './menu.scss',
 })

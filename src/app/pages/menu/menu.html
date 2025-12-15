@@ -34,7 +34,7 @@
       @for (item of menu; track item.id) {
         <app-product-card 
           [product]="item" 
-          (viewDetail)="openModal($event)">
+          (viewDetail)="openDetail($event)">
         </app-product-card>
       } @empty {
         <p>No se encontraron productos.</p>
@@ -46,6 +46,6 @@
 @if (selectedProduct) {
   <app-product-detail-modal 
     [product]="selectedProduct!" 
-    (close)="closeModal()">
+    (close)="closeDetail()">
   </app-product-detail-modal>
 }
