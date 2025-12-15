@@ -25,4 +25,14 @@ export class RestaurantList implements OnInit{
           this.isLoading = false;
         }
   }
+
+  async onToggleFavorite(restaurant: Restaurant) {
+  try {
+    await this.restaurantService.toggleRestaurantFavorite(restaurant.id);
+    restaurant.isFavorite = !restaurant.isFavorite;
+
+    } catch (error) {
+    console.error("Error al seleccionar restaurante:", error);
+    }
+}
 }

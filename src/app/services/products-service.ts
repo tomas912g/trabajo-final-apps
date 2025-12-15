@@ -87,4 +87,18 @@ export class ProductsService {
     if (!res.ok) throw new Error("Error al cambiar estado de Happy Hour al producto");
   }
 
-  }
+  //cambiar estado de favorito
+  async toggleProductFavorite(productId: number): Promise<void> {
+    const url = `${this.URL_BASE}/products/${productId}/favorite`;
+    const headers = this.getAuthHeaders();
+
+    const res = await fetch(url, {
+        method: "PUT",
+        headers: headers,
+    });
+    if (!res.ok) {
+        throw new Error("Error al alternar el estado de favorito del producto.");
+    }
+    }
+
+}

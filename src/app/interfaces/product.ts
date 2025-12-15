@@ -9,4 +9,5 @@ export interface Product {
     isDiscount: number, //para los descuentos. Ninguno de estos dos son opcionales ya que es necesario saber su estado por defecto
     discountValidUntil?: string | Date; // opcional, para vigencia
     isHappyHour: boolean,
+    isFavorite?: boolean;
 }

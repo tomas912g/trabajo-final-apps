@@ -15,14 +15,12 @@
       Aún no hay restaurantes registrados.
     </div>
   } 
-        
-        <!--Si la lista TIENE elementos-->
-        @if (restaurants.length > 0) {
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+   @else {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
                 @for (rest of restaurants; track rest.id) { 
                     <div class="col">
-                        
+                    
                         <div class="card h-100 shadow border-0 hover-lift">
 
                             <img [src]="rest.image || 'assets/placeholder.jpg'" 
@@ -30,6 +28,19 @@
                                  [style.height.px]="200" 
                                  [style.object-fit]="'cover'"
                                  class="card-img-top">
+
+                            <button 
+                                class="fav-icon"
+                                title="Marcar como favorito"
+                                (click)="onToggleFavorite(rest)">
+
+                                <i class="bi fs-5" 
+                                    [class.bi-heart-fill]="rest.isFavorite"
+                                    [class.text-danger]="rest.isFavorite"
+                                    [class.bi-heart]="!rest.isFavorite"
+                                    [class.text-secondary]="!rest.isFavorite">
+                                </i>
+                            </button>
                             
                             <div class="card-body">
                                 <h5 class="card-title text-primary">{{ rest.name }}</h5>
@@ -48,14 +59,3 @@
                 }
             </div>
         }
-           
-     @else {
-        <!-- Bloque @else: Se muestra mientras los datos están cargando (mientras el async pipe espera) -->
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="text-secondary mt-2">Cargando la lista de restaurantes...</p>
-        </div>
-    }
-</div>

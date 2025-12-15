@@ -11,6 +11,18 @@
     @for (item of myProduct; track item.id) {
         <div class="list-group-item p-3 shadow-sm mb-3 border rounded">
             <div class="d-flex justify-content-between">
+                <button 
+                            class="fav-icon" 
+                            title="Marcar como favorito"
+                            (click)="onToggleFavorite(item)">
+                            <i 
+                                class="bi fs-4" 
+                                [class.bi-heart-fill]="item.isFavorite"
+                                [class.text-danger]="item.isFavorite"
+                                [class.bi-heart]="!item.isFavorite"
+                                [class.text-secondary]="!item.isFavorite">
+                            </i>
+                    </button>
                 <h4 class="mb-1">{{ item.name }}</h4>
                 <span class="badge bg-primary fs-6">${{ item.price }}</span>
             </div>
