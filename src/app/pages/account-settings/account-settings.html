@@ -1,54 +1,62 @@
-<main class="container">
+<main class="container py-4">
   <h2>Configuración de la cuenta</h2>
 
   @if (isLoading) {
-    <p>Cargando datos del perfil...</p>
+    <div class="text-center py-5">
+      <p>Cargando datos del perfil...</p>
+    </div>
   } 
   @else {
-    <form [formGroup]="editForm" (ngSubmit)="onUpdateAccount()">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <form [formGroup]="editForm" (ngSubmit)="onUpdateAccount()">
 
-      <div class="mb-3">
-        <label for="firstName" class="form-label">Nombre</label>
-        <input id="firstName" type="text" class="form-control" formControlName="firstName">
-      </div>
+          <div class="mb-3">
+            <label for="firstName" class="form-label">Nombre</label>
+            <input id="firstName" type="text" class="form-control" formControlName="firstName">
+          </div>
 
-      <div class="mb-3">
-        <label for="lastName" class="form-label">Apellido</label>
-        <input id="lastName" type="text" class="form-control" formControlName="lastName">
-      </div>
-      
-      <div class="form-group">
-        <label for="restaurantName">Nombre del Restaurante</label>
-        <input id="restaurantName" type="text" formControlName="restaurantName" required>
-        @if (editForm.get('restaurantName')?.invalid && editForm.get('restaurantName')?.touched) {
-          <div class="error-message">El nombre del restaurante es obligatorio.</div>
-        }
-      </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Apellido</label>
+            <input id="lastName" type="text" class="form-control" formControlName="lastName">
+          </div>
+          
+          <div class="mb-3">
+            <label for="restaurantName"class="form-label">Nombre del Restaurante</label>
+            <input id="restaurantName" type="text" formControlName="restaurantName" required>
+            @if (editForm.get('restaurantName')?.invalid && editForm.get('restaurantName')?.touched) {
+              <div class="text-danger mt-1">El nombre del restaurante es obligatorio.</div>
+            }
+          </div>
 
-      <div class="mb-3">
-        <label for="phoneNumber" class="form-label">Teléfono</label>
-        <input id="phoneNumber" type="text" class="form-control" formControlName="phoneNumber">
-      </div>
+          <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Teléfono</label>
+            <input id="phoneNumber" type="text" class="form-control" formControlName="phoneNumber">
+          </div>
 
-      <div class="form-group">
-        <label for="address">Dirección</label>
-        <input id="address" type="text" formControlName="address" required>
-      </div>
+          <div class="mb-3">
+            <label for="address" class="form-label">Dirección</label>
+            <input id="address" type="text" formControlName="address" required>
+          </div>
 
-      <div class="form-group">
-        <label for="newPassword">Nueva Contraseña (No obligatorio)</label>
-        <input id="newPassword" type="password" formControlName="newPassword">
+          <div class="mb-4">
+            <label for="newPassword" class="form-label">Nueva Contraseña (No obligatorio)</label>
+            <input id="newPassword" type="password" formControlName="newPassword">
+          </div>
+                                            
+          <button type="submit" [disabled]="editForm.invalid" class="btn btn-primary w-100 mb-3"> <!--deshabilita el boton si un campo requerido no se completo-->
+            Guardar Cambios
+          </button>
+        </form>
+        
+        <hr>
+        
+        <button (click)="onDeleteAccount()" class="btn btn-danger w-100">
+          Eliminar cuenta
+        </button>
       </div>
-                                        
-      <button type="submit" [disabled]="editForm.invalid" class="btn btn-primary"> //deshabilita el boton si un campo requerido no se completo 
-        Guardar Cambios
-      </button>
-    </form>
-    
-    <hr>
-    
-    <button (click)="onDeleteAccount()" class="btn btn-danger">
-      Eliminar cuenta
-    </button>
-  }
+    </div>
+
+    }
+
 </main>

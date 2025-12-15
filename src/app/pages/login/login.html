@@ -1,49 +1,49 @@
-<div class="container  d-flex justify-content-center align-items-center min-vh-100">
-  <div id="container" class="card p-4 shadow border-0" style="width: 100%; max-width: 400px;">
-  <h1 class="text-center fw-bold mb-4 text-success">Iniciar sesión</h1>
+<div class="container  d-flex justify-content-center align-items-center h-100 min-vh-100">
+  <div class="col-12 col-sm-10 col-md-6 col-lg-4">
 
-  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
-  <div class="mb-3">
-    <label for="restaurantName" class="form-label fw-semibold">Nombre del Restaurante</label>
-    <input id="restaurantName" name="restaurantName" type="text" ngModel required #nameCtrl="ngModel" class="form-control" placeholder="Ej: Pizzeria Pepe" [class.is-invalid]="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)">
-    @if (nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)){
-        <p class="invalid-feedback">Nombre no encontrado</p>
-    } 
-  </div>
+    <div id="container" class="card p-4 shadow border-0 w-100">
+      <h1 class="text-center fw-bold mb-4 text-success">Iniciar sesión</h1>
 
-
-  <div class = "mb-3">
-    <label for="password" class="form-label fw-semibold">Contraseña</label>
-    <input id="password" name="password" type="password" ngModel required minlength="4" #passCtrl="ngModel" autocomplete="current-password" class="form-control" placeholder="••••••••" [class.is-invalid]="passCtrl.invalid && (passCtrl.dirty || passCtrl.touched)">
-    @if (passCtrl.invalid && (passCtrl.dirty && passCtrl.touched)) {
-      <p class="invalid-feedback">Contraseña incorrecta</p>
-    } 
-  </div>
-
-  <div>
-  </div>
-  @if (isLoading){
-        <div class="d-flex justify-content-between my-3">
-            <app-spinner></app-spinner>
+      <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+        <div class="mb-3">
+          <label for="restaurantName" class="form-label fw-semibold">Nombre del Restaurante</label>
+          <input id="restaurantName" name="restaurantName" type="text" ngModel required #nameCtrl="ngModel" class="form-control" placeholder="Ej: Pizzeria Pepe" [class.is-invalid]="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)">
+          @if (nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)){
+            <p class="invalid-feedback">Nombre no encontrado</p>
+          } 
         </div>
-      }
 
-      @if (errorLogin) {
-        <div class="alert alert-danger text-center py-2" role="alert">
-        <small><i class="bi bi-exclamation-triangle-fill me-1"></i>Datos de sesión incorrectos, intenta nuevamente</small>
-      </div>
-      }
+        <div class = "mb-3">
+          <label for="password" class="form-label fw-semibold">Contraseña</label>
+          <input id="password" name="password" type="password" ngModel required minlength="4" #passCtrl="ngModel" autocomplete="current-password" class="form-control" placeholder="••••••••" [class.is-invalid]="passCtrl.invalid && (passCtrl.dirty || passCtrl.touched)">
+          @if (passCtrl.invalid && (passCtrl.dirty && passCtrl.touched)) {
+            <p class="invalid-feedback">Contraseña incorrecta</p>
+          } 
+        </div>
 
-      <button
-      type="submit"
-      class="btn btn-success w-100 py-2 fw-bold shadow-sm"
-      [disabled]="loginForm.invalid || isLoading">Ingresar</button>
+        @if (isLoading){
+              <div class="d-flex justify-content-between my-3">
+                  <app-spinner></app-spinner>
+              </div>
+            }
 
-  <div class="mt-4 text-center">
-      <span class="text-muted">¿No tenés cuenta?</span>
-      <a routerLink="/register" class="text-decoration-none fw-bold ms-1 text-success">Registrate</a>
-   </div>
+        @if (errorLogin) {
+          <div class="alert alert-danger text-center py-2" role="alert">
+            <small><i class="bi bi-exclamation-triangle-fill me-1"></i>Datos de sesión incorrectos, intenta nuevamente</small>
+        </div>
+        }
 
-  </form>
+        <button
+        type="submit"
+        class="btn btn-success w-100 py-2 fw-bold shadow-sm"
+        [disabled]="loginForm.invalid || isLoading">Ingresar</button>
+
+        <div class="mt-4 text-center">
+            <span class="text-muted">¿No tenés cuenta?</span>
+            <a routerLink="/register" class="text-decoration-none fw-bold ms-1 text-success">Registrate</a>
+        </div>
+        
+      </form>
+    </div>
   </div>
-  </div>
+</div>

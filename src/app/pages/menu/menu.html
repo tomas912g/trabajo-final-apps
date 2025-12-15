@@ -1,48 +1,53 @@
-<header class="main-header">
-    <h1> Menu del restaurante ID: {{ restaurantId }}</h1>
-</header>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <a routerLink="/menu" class="logo-link">
-                <span class="app-name">Menú Digital</span>
-            </a>
-        </div>
-        <div>
-            <a routerLink="/register" class="nav-link register-btn">Regístrate</a>
-        </div>
-    </nav>
-<main class="menu-container">
+<div class="container-fluid p-0">
+  <header class="main-header bg-dark text-white p-3">
+      <h1 class="h4 mb-0 text-center"> Menu del restaurante ID: {{ restaurantId }}</h1>
+  </header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+          <div class="container">
+              <a routerLink="/menu" class="navbar-brand">
+                  <span class="app-name fw-bold">Menú Digital</span>
+              </a>
+              <a routerLink="/register" class="btn btn-outline-success">Regístrate</a>
+          </div>
+      </nav>
+  <main class="menu-container container mt-4">
 
-  <section class="categories-nav">
-    @for (cat of categories; track cat.name) {
-      <button 
-      class="categories-btn"
-      [class.active]="currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount"
-      (click) = "selectCategory(cat.categoryId, cat.isDiscount)">
-      
-      {{ cat.name }}
-      </button>
-      }
-  </section>
+    <section class="categories-nav mb-4">
+      <div class="d-flex flex-row overflow-x-auto pb-2 gap-2">
+        @for (cat of categories; track cat.name) {
+          <button 
+          class="btn btn-sm text-nowrap"
+          [class.active]="currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount"
+          (click) = "selectCategory(cat.categoryId, cat.isDiscount)">
+          
+          {{ cat.name }}
+          </button>
+        }
+      </div>
+    </section>
 
-    @if (isLoading){
-        <div class="spinner-area">
-            <app-spinner></app-spinner>
-        </div>
-    } @else {
-    <div class="products-list">
-      @for (item of menu; track item.id) {
-        <app-product-card 
-          [product]="item" 
-          (viewDetail)="openDetail($event)">
-        </app-product-card>
-      } @empty {
-        <p>No se encontraron productos.</p>
-      }
-    </div>
-  }
-</main>
-
+      @if (isLoading){
+          <div class="spinner-area text-center py-5">
+              <app-spinner></app-spinner>
+          </div>
+      } @else {
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 products-list">
+        @for (item of menu; track item.id) {
+          <div class="col">
+            <app-product-card 
+              [product]="item" 
+              (viewDetail)="openDetail($event)">
+            </app-product-card>
+          </div>
+        } @empty {
+          <div class="col-12">
+            <p class="alert alert-info text-center">No se encontraron productos.</p>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>
 @if (selectedProduct) {
   <app-product-detail-modal 
     [product]="selectedProduct!" 

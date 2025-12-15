@@ -1,5 +1,5 @@
 <div class="container mt-5 mb-5">
-    <div class="d-flex justify-content-end gap-2 mb-2">
+    <div class="d-flex flex-sm-row flex-column justify-content-end gap-2 mb-4">
         <a routerLink="/register" class="btn btn-outline-success">
             <i class="bi bi-person-plus-fill me-1"></i> Registrarse</a>
         <a routerLink="/login" class="btn btn-success">
@@ -28,6 +28,8 @@
                     <div class="col">
                     
                         <div class="card h-100 shadow border-0 hover-lift">
+                            
+                            <div style="position: relative;">
 
                             <img [src]="rest.image || 'assets/placeholder.jpg'" 
                                  [alt]="rest.name" 
@@ -36,7 +38,8 @@
                                  class="card-img-top">
 
                             <button 
-                                class="fav-icon"
+                                class="btn btn-light rounded-circle shadow p-2"
+                                style="position: absolute; top: 10px; right: 10px; z-index: 10;"
                                 title="Marcar como favorito"
                                 (click)="onToggleFavorite(rest)">
 
@@ -47,6 +50,7 @@
                                     [class.text-secondary]="!rest.isFavorite">
                                 </i>
                             </button>
+                        </div>
                             
                             <div class="card-body">
                                 <h5 class="card-title text-success">{{ rest.name }}</h5>
