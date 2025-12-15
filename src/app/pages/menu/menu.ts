@@ -1,16 +1,12 @@
 import { Component, inject, OnInit,} from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../services/products-service';
 import { Product } from '../../interfaces/product';
 import { Spinner } from '../../components/spinner/spinner';
-import { ProductCard } from '../../components/product-card/product-card';
-import { ProductDetailModal } from '../../components/product-detail-modal/product-detail-modal';
-import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-menu',
-  imports: [Spinner, ProductCard, ProductDetailModal, RouterLink, CommonModule],
+  imports: [Spinner],
   templateUrl: './menu.html',
   styleUrl: './menu.scss',
 })
@@ -23,7 +19,6 @@ export class Menu implements OnInit{
   menu: Product[]= []; //array de productos
   isLoading : boolean = true; //mostrar spinner de carga
   selectedProduct: Product | null = null; //producto seleccionado para ver detalle
-
   //variables de Estado para el filtrado
   currentCategoryId: number | undefined = undefined; // Guarda la categoría seleccionada por el usuario
   currentIsDiscount: boolean = false; //Guarda si el usuario ha activado el filtro de ofertas
@@ -73,15 +68,6 @@ export class Menu implements OnInit{
       this.isLoading = false;
     }
   }  
-
-  filterMenu(categoryId: number| undefined, isDiscount: boolean){
-    //actualizar estado interno
-    this.currentCategoryId = categoryId;
-    this.currentIsDiscount = isDiscount;
-
-    //recarga el menu con los nuevos filtros
-    this.loadMenu();
-  }
   
   async loadMenu(){
     this.isLoading = true;
@@ -102,10 +88,10 @@ export class Menu implements OnInit{
       }
     }
   
-  openModal(product: Product){
+  openDetail(product: Product){
     this.selectedProduct = product;
   }
-  closeModal(){
+  closeDetail(){
     this.selectedProduct = null;
   }
 }

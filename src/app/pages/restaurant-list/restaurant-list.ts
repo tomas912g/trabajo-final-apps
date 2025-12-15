@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RestaurantService } from '../../services/restaurants';
-import { Observable } from 'rxjs';
 import { Restaurant } from '../../interfaces/restaurants';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,9 +12,17 @@ import { CommonModule } from '@angular/common';
 })
 export class RestaurantList implements OnInit{
   restaurantService = inject(RestaurantService)
-  restaurants$!: Observable<Restaurant[]>; //variables que guardan la lista que recibimos
+  restaurants: Restaurant[] = []; //variables que guardan la lista que recibimos
+  isLoading: boolean = true;
 
-  ngOnInit(): void {
-    this.restaurants$ = this.restaurantService.getRestaurants();
+  async ngOnInit() {
+    this.isLoading = true;
+    try{
+      this.restaurants = await this.restaurantService.getRestaurants();
+      } catch (error){
+      console.error(error);
+        } finally{
+          this.isLoading = false;
+        }
   }
 }

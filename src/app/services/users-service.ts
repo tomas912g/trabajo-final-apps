@@ -1,14 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NewUser } from '../interfaces/user';
 import { User } from '../interfaces/user';
+import { AuthService } from './auth-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = 'https://agenda-api.somee.com/api/Users';
+  authService = inject(AuthService);
+  readonly URL_BASE = 'https://w370351.ferozo.com/api/users';
+
+  getAuthHeaders(){
+    const token = this.authService.token || localStorage.getItem("token");
+  return {
+    'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+  };
+}
   async register(registerData: NewUser) {
-    const res = await fetch("https://w370351.ferozo.com/api/users",
+    const res = await fetch(this.URL_BASE,
     { 
       method: "POST",
       headers: {
@@ -16,72 +26,45 @@ export class UsersService {
       },
       body: JSON.stringify(registerData)
     });
-  const data = await res.json();
-  return { ok: res.ok, ...data };
+  if (!res.ok){
+      throw new Error("Error al registrar usuario"); 
+    }
+    try{
+      return await res.json();
+    } catch{
+      return {ok: true};
+    }
   }
 
-  async getAccountData(): Promise<User> {
-    const token = localStorage.getItem('authToken'); 
-    if (!token) {
-        // si no hay token, lanza un error para que el componente redirija al login
-        throw new Error('Usuario no autenticado.');
-    }
-    const res = await fetch(`${this.apiUrl}/mi-cuenta`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`, //envía el token de autenticación
-            'Content-Type': 'application/json',
-        },
-    });
-    if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Error al obtener los datos de la cuenta');// si la respuesta HTTP no es 200, lanza un error
-    }
-    const data: User = await res.json();
-    return data; //devuelve el objeto User
-  }
+  //2 obtener datos
+  async getUserProfile(userId: number): Promise<User> {
+    const res = await fetch(`${this.URL_BASE}/${userId}`, 
+    {
+      method: "GET",
+      headers: this.getAuthHeaders()});
 
-  private getAuthToken(): string | null {
-    return localStorage.getItem('authToken'); 
+      if (!res.ok) throw new Error("Error al buscar el perfil");
+      return await res.json();
   }
-
-  async updateAccount(changes: Partial<NewUser>): Promise<any> {
-    const token = this.getAuthToken();
-    if (!token) {
-        throw new Error('No autorizado: Usuario no encontrado');
-    }
-    const res = await fetch(`${this.apiUrl}/mi-cuenta`, {
-        method: 'PUT', 
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(changes)
+  
+  //3 actualizar datos
+  async userProfileUpdate(userId: number, data: Partial<NewUser>): Promise<void>{ //gracias al void no hacemos return
+    const res = await fetch(`${this.URL_BASE}/${userId}`, {
+      method: "PUT",
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(data)
     });
 
-    if (!res.ok) {
-        throw new Error('Error al actualizar la cuenta.');
-    }
-    return res.json(); //devuelve la respuesta del servidor 
+    if (!res.ok) throw new Error("Error al querer actualizar el perfil")
   }
 
-  async deleteAccount(): Promise<void> {
-    const token = this.getAuthToken();
-    if (!token) {
-        throw new Error('No autorizado: Usuario no encontrado');
-    }
-    const res = await fetch(`${this.apiUrl}/mi-cuenta`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
+  //4 eliminar cuenta
+  async deleteUserProfil(userId: number): Promise<void>{
+    const res = await fetch(`${this.URL_BASE}/${userId}`,{
+      method: "DELETE",
+      headers: this.getAuthHeaders(),
     });
-
-    if (!res.ok) {
-        throw new Error('Error al eliminar la cuenta.');
-    }
-    //limpia el token de sesión después de la eliminación exitosa
-    localStorage.removeItem('authToken'); 
+    if (!res.ok) throw new Error("Error al querer eliminar el perfil")
   }
 }
 
