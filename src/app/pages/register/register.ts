@@ -21,11 +21,13 @@ export class Register {
   async register(form: NgForm) {
     console.log(form.value);
     this.errorRegister = false;
-    const { email, password, password2, restaurant, address } = form.value as any;
-    if (!email ||
+    const { firstName, lastName, password, password2, restaurantName, address, phoneNumber } = form.value as any;
+    if (!firstName ||
+      !lastName ||
       !password ||
       !password2 || 
-      !restaurant ||
+      !restaurantName ||
+      !phoneNumber ||
       !address ||
       form.value.password !== form.value.password2) {
       this.errorRegister = true;
@@ -33,12 +35,21 @@ export class Register {
     }
   this.isLoading = true;
   try {
-    const payload: NewUser = { email, password, restaurant, address };
+    // Generamos un email ficticio único para que el servidor en ferozo.com lo acepte
+    const randomId = Date.now(); 
+    const fakeEmail = `${firstName}.${lastName}.${randomId}@sin-email.com`
+                      .toLowerCase()
+                      .replace(/\s+/g, ''); // Quitamos espacios si los hay
+    const payload: NewUser = { firstName, lastName, email: fakeEmail, password, restaurantName, address, phoneNumber };
+    console.log("enviando payload", payload);
     const res = await this.usersService.register(payload);
-    if (res?.ok) {
+    if (res?.ok || res?.id) {
       this.router.navigate(['/login']);
       return;
     }
+    this.errorRegister = true;
+    } catch (e) {
+    console.error(e);
     this.errorRegister = true;
   } finally {
     this.isLoading = false;

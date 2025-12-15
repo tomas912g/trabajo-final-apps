@@ -10,18 +10,16 @@ import { onlyLoggedCostumerGuard } from './guard/only-logged-customer-guard-guar
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'restaurantList',
         pathMatch: 'full'
     },
     {
         path: "login",
         component: LoginPage,
-        canActivate: [publicCostumerGuard]
     },
     {
         path: "register",
         component: Register,
-        canActivate: [publicCostumerGuard]
     },
     {
         path: "menu/:userId",

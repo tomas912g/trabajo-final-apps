@@ -1,17 +1,23 @@
 <div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-end gap-2 mb-2">
+        <a routerLink="/register" class="btn btn-outline-success">
+            <i class="bi bi-person-plus-fill me-1"></i> Registrarse</a>
+        <a routerLink="/login" class="btn btn-success">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión</a>
+    </div>
     
     <h1 class="text-3xl fw-bold text-center mb-5">Restaurantes Disponibles</h1>
 
     @if (isLoading) {
         <div class="text-center py-5">
-            <div class="spinner-border text-primary">
+            <div class="spinner-border text-secondary">
                 <span class="visually-hidden">Cargando...</span>
             </div>
             <p class="text-secondary mt-2">Cargando la lista de restaurantes...</p>
         </div>
     } 
     @else if (restaurants.length === 0) {
-    <div class="alert alert-info text-center py-4" role="alert">
+    <div class="alert bg-success text-center text-white py-4" role="alert">
       Aún no hay restaurantes registrados.
     </div>
   } 
@@ -43,7 +49,7 @@
                             </button>
                             
                             <div class="card-body">
-                                <h5 class="card-title text-primary">{{ rest.name }}</h5>
+                                <h5 class="card-title text-success">{{ rest.name }}</h5>
                                 <p class="card-text text-muted mb-3">{{ rest.address }}</p>
                                 <span class="badge bg-warning text-dark">{{ rest.category }}</span>
                             </div>

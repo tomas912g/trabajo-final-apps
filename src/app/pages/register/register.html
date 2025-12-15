@@ -14,6 +14,16 @@
     </div>
 
     <div class="form-item">
+        <label for="firstName">Nombre</label>
+        <input id="firstName" name="firstName" type="text" ngModel required firstName #firstName="ngModel" autocomplete="firstName" class="input-text">
+    </div>
+    
+    <div class="form-item">
+        <label for="lastName">Apellido</label>
+        <input id="lastName" name="lastName" type="text" ngModel required lastName #lastName="ngModel" autocomplete="lastName" class="input-text">
+    </div>
+
+    <div class="form-item">
         <label for="password">Contraseña</label>
         <input id="password" name="password" type="password" ngModel required minlength="4" #password="ngModel" autocomplete="new-password" class="input-text">
     @if (password.invalid && !password.pristine) {
@@ -26,7 +36,6 @@
     }
     </div>
 
-
     <div class="form-item">
         <label for="password2">Repite la contraseña</label>
         <input id="password2" name="password2" type="password" ngModel required #password2="ngModel" autocomplete="new-password" class="input-text">
@@ -38,6 +47,16 @@
         @if (!password2.pristine && password.value !== password2.value && !password2.errors?.['required']) {
             <span class="text-error">Las contraseñas no coinciden.</span>
         }
+    </div>
+
+    <div class="form-item">
+        <label for="address">Dirección</label>
+        <input id="address" name="address" type="text" ngModel required address #address="ngModel" autocomplete="address" class="input-text">
+    </div>
+
+    <div class="form-item">
+        <label for="phoneNumber">Numero de teléfono</label>
+        <input id="phoneNumber" name="phoneNumber" type="text" ngModel required phoneNumber #phoneNumber="ngModel" autocomplete="phoneNumber" class="input-text">
     </div>
 
     <div class="form-actions">

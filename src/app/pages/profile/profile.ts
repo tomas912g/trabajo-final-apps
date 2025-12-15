@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NewUser } from '../../interfaces/user';
 import Swal from 'sweetalert2';
 import { Spinner } from '../../components/spinner/spinner';
+
 @Component({
   selector: 'app-profile',
   imports: [Spinner, FormsModule],
@@ -21,6 +22,7 @@ export class Profile implements OnInit{
   dataProfile: NewUser = {
     restaurantName: "",
     address: "",
+    email: "",
     password: "",
     firstName: "",
     lastName: "",
@@ -55,8 +57,12 @@ export class Profile implements OnInit{
       const user = await this.userService.getUserProfile(this.userId);
 
       this.dataProfile.restaurantName = user.restaurantName;
+      this.dataProfile.firstName = user.firstName;
+      this.dataProfile.lastName = user.lastName;
+      this.dataProfile.phoneNumber = user.phoneNumber;
+      this.dataProfile.email = user.email
       this.dataProfile.address = user.address || "";
-      this.dataProfile.password = ""; //contraseña vacia a proposito
+      this.dataProfile.password = ""; //contraseña vacia a proposito para no mostrar la encriptada
       } catch (error){
         console.error(error);
         this.router.navigate(['/login']);
@@ -92,6 +98,7 @@ export class Profile implements OnInit{
       this.isLoading = false;
     }
   }
+  
 
   async deleteAccount() {
     const result = await this.swalWithBootstrapButtons.fire({
@@ -106,7 +113,7 @@ export class Profile implements OnInit{
     
     if (result.isConfirmed) {
       try {
-        await this.userService.deleteUserProfil(this.userId);
+        await this.userService.deleteUserProfile(this.userId);
         localStorage.clear();
         
         await this.swalWithBootstrapButtons.fire({
