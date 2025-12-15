@@ -17,7 +17,7 @@ export class CategoriesService {
   private getHeaders(): HttpHeaders {
     const token = this.authService.token; 
     if (!token) {
-      throw new Error('No hay sesión activa. Token no disponible.');
+      throw new Error('No hay sesión activa');
     }
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
