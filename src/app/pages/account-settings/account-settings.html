@@ -6,18 +6,28 @@
   } 
   @else {
     <form [formGroup]="editForm" (ngSubmit)="onUpdateAccount()">
-      
-      <div class="form-group">
-        <label for="email">Email (No modificable)</label>
-        <input id="email" type="email" [value]="user?.email" disabled class="form-control-disabled">
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">Nombre</label>
+        <input id="firstName" type="text" class="form-control" formControlName="firstName">
+      </div>
+
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Apellido</label>
+        <input id="lastName" type="text" class="form-control" formControlName="lastName">
       </div>
       
       <div class="form-group">
-        <label for="restaurant">Nombre del Restaurante</label>
-        <input id="restaurant" type="text" formControlName="restaurant" required>
-        @if (editForm.get('restaurant')?.invalid && editForm.get('restaurant')?.touched) {
+        <label for="restaurantName">Nombre del Restaurante</label>
+        <input id="restaurantName" type="text" formControlName="restaurantName" required>
+        @if (editForm.get('restaurantName')?.invalid && editForm.get('restaurantName')?.touched) {
           <div class="error-message">El nombre del restaurante es obligatorio.</div>
         }
+      </div>
+
+      <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Teléfono</label>
+        <input id="phoneNumber" type="text" class="form-control" formControlName="phoneNumber">
       </div>
 
       <div class="form-group">
@@ -26,7 +36,7 @@
       </div>
 
       <div class="form-group">
-        <label for="newPassword">Cambiar Contraseña (Dejar vacío para mantener la actual)</label>
+        <label for="newPassword">Nueva Contraseña (No obligatorio)</label>
         <input id="newPassword" type="password" formControlName="newPassword">
       </div>
                                         

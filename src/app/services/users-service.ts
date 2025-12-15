@@ -59,7 +59,7 @@ export class UsersService {
   }
 
   //4 eliminar cuenta
-  async deleteUserProfil(userId: number): Promise<void>{
+  async deleteUserProfile(userId: number): Promise<void>{
     const res = await fetch(`${this.URL_BASE}/${userId}`,{
       method: "DELETE",
       headers: this.getAuthHeaders(),
