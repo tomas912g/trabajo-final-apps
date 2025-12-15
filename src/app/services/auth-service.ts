@@ -8,17 +8,17 @@ import { logindata } from '../interfaces/auth';
 
 export class AuthService {
   router = inject(Router)
-  token: null|string = localStorage.getItem("token");
-  revisionTokenInterval:number|undefined;
+  token: null|string = localStorage.getItem("token"); // hace que la app mantenga al usuario logueado automáticamente al recargar la pagina 
+  revisionTokenInterval:number|undefined;// revisa la expiracion del token
 
-  get currentUserId(): number | null {
-    if (!this.token) return null;
+  get currentUserId(): number | null { //promete devolver el ID del usuario como un number si existe o null si no.
+    if (!this.token) return null; //devuelve null si no hay token
     try {
       const payload = this.parseJwt(this.token);
-      return Number(payload.id || payload.sub || payload.userId);
+      return Number(payload.id || payload.sub || payload.userId);// busca el token
     } catch (error) {
       console.error("Error al leer ID:", error);
-      return null;
+      return null;// ante cualquier error devuelve null
     }
   }
 
@@ -38,8 +38,8 @@ export class AuthService {
     }
   )
   if(res.ok){
-    this.token = await res.text()
-    localStorage.setItem("token", this.token)
+    this.token = await res.text()// lee la respuesta como res.text() y lo asigna a token
+    localStorage.setItem("token", this.token)// guarda el token en el localStorage
     return true;
   } else {
     return false
@@ -47,7 +47,7 @@ export class AuthService {
 }
 
   logout(){
-    this.token = null;
+    this.token = null;// elimina el token de la memoria
     localStorage.removeItem("token");
     this.router.navigate(["/login"])
   }

@@ -10,28 +10,28 @@ export class RestaurantService {
   readonly URL_BASE = "https://w370351.ferozo.com/api/users"; //obtiene los restaurantes registrados
 
   getAuthHeaders(): { [key: string]: string } {
-        const token = this.authService.token || localStorage.getItem("token");
+        const token = this.authService.token || localStorage.getItem("token"); //busca el token. Primero en en authService y sino en localStorage
         if (!token) {
-          throw new Error('No hay sesión activa para realizar esta operación.');
+          throw new Error('No hay sesión activa para realizar esta operación.');// si no se encuentra el token lanza este error
         }
-        return {
+        return {// si existe el token devuelve el token en formato bearer
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}` //
         };
     }
-  async getRestaurants(): Promise<Restaurant[]> { 
-    const res = await fetch(this.URL_BASE);
+  async getRestaurants(): Promise<Restaurant[]> { // promete devolver una array de restaurantes
+    const res = await fetch(this.URL_BASE);// peticion para obtener todos los restaurantes
 
     if(!res.ok) throw new Error("Error al cargar los restaurantes");
     
-    return await res.json();
+    return await res.json();// si la respuesta fue exitosa, devuelve la lista de restaurantes
   }
 
-  async toggleRestaurantFavorite(restaurantId: number): Promise<void> {
-    const url = `${this.URL_BASE.replace('/users/', '/restaurants/')}/${restaurantId}/favorite`;
-    const headers = this.getAuthHeaders();
+  async toggleRestaurantFavorite(restaurantId: number): Promise<void> {//acepta el restaurantId
+    const url = `${this.URL_BASE.replace('/users/', '/restaurants/')}/${restaurantId}/favorite`;// se construye la url
+    const headers = this.getAuthHeaders();// obtiene el token
 
-    const res = await fetch(url, {
+    const res = await fetch(url, {// hace una peticion PUT a la URL construida
         method: "PUT", // para alternar el estado
         headers: headers,
     });
@@ -39,5 +39,5 @@ export class RestaurantService {
     if (!res.ok) {
         throw new Error("Error al cambiar el estado de favorito del restaurante.");
     }
-}
+  }
 }
