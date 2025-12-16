@@ -40,9 +40,10 @@ export class CategoriesFormComponent implements OnInit {
 
   async onSubmit() {
     try {
-      if (this.isEditMode && this.categoryIdToEdit !== null) {
+      const id = this.categoryIdToEdit();
+      if (this.isEditMode && id !== null) {
         // actualiza categoria
-        await this.categoriesService.updateCategory(this.categoryIdToEdit()!, this.categoryData); // llama a categoryIdToEdit() para obtener el valor number
+        await this.categoriesService.updateCategory(id, this.categoryData); 
         alert('Categoria actualizada');
       } else {
         //crea categoria
@@ -50,7 +51,6 @@ export class CategoriesFormComponent implements OnInit {
         alert('Categoria creada');
       }
       } catch (error) {
-      console.error('Error al guardar categoría:', error);
       alert('Error al guardar la categoría.');
     }
   }

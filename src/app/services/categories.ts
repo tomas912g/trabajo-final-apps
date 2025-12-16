@@ -12,11 +12,11 @@ export class CategoriesService {
 
   private http = inject(HttpClient);
   private authService = inject(AuthService); 
-  private baseUrl = 'https://agenda-api.somee.com/api'; // base de la API
+  private baseUrl = "https://w370351.ferozo.com/api"; // base de la API
   
   // verifica que exista un token
   private getHeaders(): HttpHeaders {
-    const token = this.authService.token; 
+    const token = this.authService.token || localStorage.getItem('token'); 
     if (!token) { //comprueba si el token no existe y lanza un error
       throw new Error('No hay sesión activa');
     }
@@ -52,10 +52,11 @@ async createCategory(categoryData: Category): Promise<CategoryId> { //recibe dtp
 
 // editar una categoria
 async updateCategory(id: number, categoryData: Category): Promise<any> { //rcibe el id de la categoría a modificar y los nuevos categoryData
-    const url = `${this.baseUrl}/categories/${id}`; //construye la URL para apuntar al recurso específico mediante su ID
-  const headers = this.getHeaders();
-    return firstValueFrom(this.http.put(url, categoryData, { headers })); //realiza la peticion put
-  }
+    const url = `${this.baseUrl}/categories/${id}`;
+    const headers = this.getHeaders();
+    return firstValueFrom(this.http.put<any>(url, categoryData, { headers }));
+}
+
 
 // eliminar una categoria
 async deleteCategory(id: number): Promise<void> {// recibe el ID de la categoria que se va a eliminar
