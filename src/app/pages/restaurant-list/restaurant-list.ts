@@ -18,6 +18,9 @@ export class RestaurantList implements OnInit{
   async ngOnInit() {
     this.isLoading = true;
     try{
+    const data = await this.restaurantService.getRestaurants();
+    console.log("Datos recibidos del backend:", data); 
+    this.restaurants = data;
       this.restaurants = await this.restaurantService.getRestaurants();
       } catch (error){
       console.error(error);

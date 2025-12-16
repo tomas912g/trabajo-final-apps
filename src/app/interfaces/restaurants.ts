@@ -1,7 +1,8 @@
 export interface Restaurant {
     id: number,
-    name: string,
+    restaurantName: string,
     address: string,
+    phoneNumber: string,
     image?: string,
     category?: string,
     isFavorite?: boolean,
