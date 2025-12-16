@@ -7,7 +7,7 @@ import { AuthService } from './auth-service';
   providedIn: 'root'
 })
 export class ProductsService {
-  readonly URL_BASE = "https://restaurant-api.somee.com/api";
+  readonly URL_BASE = "https://w370351.ferozo.com/api";
   
   authService = inject(AuthService);
   // verifica la existencia de un Token valido

@@ -33,7 +33,6 @@ export class Menu implements OnInit{
     {name: "Happy Hour", categoryId: undefined, isHappyHour: true, isDiscount: false},
     {name: "Entradas", categoryId: 1, isDiscount: false},
     {name: "Plato Principal", categoryId: 2, isDiscount: false},
-    {name: "Postres", categoryId: 3, isDiscount: false},
     {name: "Bebidas", categoryId: 4, isDiscount: false},
     {name: "Vinos", categoryId: 5, isDiscount: false},
     {name: "Postres", categoryId: 6, isDiscount: false},
@@ -77,6 +76,12 @@ export class Menu implements OnInit{
         this.currentCategoryId,
         this.currentIsDiscount,
       );
+
+console.log("--> LISTA DE PRODUCTOS:", products);
+    if (products.length > 0) {
+       console.log("--> PRIMER PRODUCTO (Ejemplo):", products[0]);
+    }
+
       this.menu = products;
     } catch (err) {
       console.error("Error al cargar el menu:", err)

@@ -13,7 +13,7 @@
 
     <section class="categories-nav mb-4 w-100">
       <div class="d-flex flex-row overflow-x-auto pb-2 gap-2 w-100">
-        @for (cat of categories; track cat.name) {
+        @for (cat of categories; track $index) {
           <button 
           class="btn text-nowrap flex-fill"
           [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
