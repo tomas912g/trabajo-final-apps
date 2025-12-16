@@ -27,15 +27,11 @@
   </div>
 
   <div class="col-4 d-flex justify-content-end p-2">
-      @if (product().imageUrl) {
-        <img [src]="product().imageUrl" 
+        <img [src]="product().imageUrl || 'platos.jpg'"
              [alt]="product().name"
-             class="img-fluid rounded custom-img-size">
-      } @else {
-        <div class="bg-light rounded d-flex align-items-center justify-content-center custom-img-size text-muted">
-          <i class="bi bi-image"></i>
-        </div>
-      }
+             class="card-img-top" 
+            style="height: 200px; object-fit: cover;">
+
     </div>
   </div>
 </article>
