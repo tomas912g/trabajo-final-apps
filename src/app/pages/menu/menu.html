@@ -24,7 +24,7 @@
             class="btn text-nowrap w-100"
             [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
             [class.btn-outline-success]="!(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
-            (click) = "selectCategory(cat.categoryId, cat.isDiscount)">
+            (click) = "selectCategory(cat.categoryId, cat.isDiscount, cat.isHappyHour || false)">
             {{ cat.name }}
             </button>
             @if (isOwner && cat.categoryId !== undefined) {

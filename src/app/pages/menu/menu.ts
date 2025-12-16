@@ -35,7 +35,9 @@ export class Menu implements OnInit{
 
   //variables de Estado para el filtrado
   currentCategoryId: number | undefined = undefined; // Guarda la categoría seleccionada por el usuario
-  currentIsDiscount: boolean = false; //Guarda si el usuario ha activado el filtro de ofertas 
+  currentIsDiscount: boolean = false; //Guarda si el usuario ha activado el filtro de ofertas
+  currentIsHappyHour: boolean = false;
+
 
   categories = [
     {name: "Promociones", categoryId: undefined, isDiscount: true},
@@ -112,33 +114,34 @@ export class Menu implements OnInit{
       }
   }
 
-  selectCategory(categoryId: number | undefined, isDiscount: boolean){
+  selectCategory(categoryId: number | undefined, isDiscount: boolean, isHappyHour: boolean = false){
     this.currentCategoryId = categoryId;
     this.currentIsDiscount = isDiscount;
+    this.currentIsHappyHour = isHappyHour
     this.loadMenu();
+    
   }
-
+  
   async loadMenu(){
     this.isLoading = true; 
     try {
-      const products = await this.inProduct.getProductsByRestaurant(
+      let products = await this.inProduct.getProductsByRestaurant(
         this.restaurantId,
         this.currentCategoryId,
         this.currentIsDiscount,
       );
-
-console.log("--> LISTA DE PRODUCTOS:", products);
-    if (products.length > 0) {
-       console.log("--> PRIMER PRODUCTO (Ejemplo):", products[0]);
+      if (this.currentIsHappyHour) {
+        products = products.filter(p => p.isHappyHour === true);
     }
 
-      this.menu = products;
-    } catch (err) {
-      console.error("Error al cargar el menu:", err)
-    } finally {
-      this.isLoading = false;
-    }
-  }  
+    this.menu = products;
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    this.isLoading = false;
+  }
+}
+
     
   openDetail(product: Product){
     this.selectedProduct = product;
