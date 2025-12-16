@@ -1,0 +1,23 @@
+// Efecto Hover: Levanta un poco la tarjeta al pasar el mouse
+.hover-shadow {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; // shadow-lg de bootstrap
+  }
+}
+
+// Clase para cortar la descripción en 2 líneas (estilo "...")
+.text-truncate-multiline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+// Forzamos que la imagen sea un cuadrado perfecto y no se deforme
+.custom-img-size {
+  width: 110px;
+  height: 110px;
+  object-fit: cover; // Importante para que la foto no se aplaste
+}

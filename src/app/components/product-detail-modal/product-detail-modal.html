@@ -1,27 +1,28 @@
-<div class="product-detail-overlay">
-    <article class="product-detail-card" (click)="preventClose($event)">
-        <button class="close-boton" (click)="onClose()">
-            &times;
-        </button>
+<div class="overlay" (click)="onClose()">
+    <article class="custom-modal card border-0 shadow-lg" (click)="preventClose($event)">
+        <button type="button" class="btn-close custom-close" aria-label="Close" (click)="onClose()"></button>
     @if (product().imageUrl) {
         <div class="image-container">
-        <img src="product().imageURL" 
-        alt="product().name">>
+        <img src="product().imageUrl" 
+        [alt]="product().name">
+        class="card-img-top"
         </div>
         }
-    <div class="product-detail-info">
-        <h2 class="product-detail-title">{{product().name}}</h2>
-        <p class="product-detail-description">{{product().description}}</p>
-        <div class="product-detail-price">
+    <div class="card-body p-4">
+        <h2 class="card-title fw-bold mb-2">{{product().name}}</h2>
+        <p class="card-text text-muted mb-4">{{product().description}}</p>
+        <div class="price-container">
             @if (tieneDescuentoOHh() && product().isDiscount) {
-                <span class="precio-viejo">
+                <div class = "d-flex align-items-center gap-2">
+                <span class="text-decoration-line-through text-muted fs-5">
                 {{ product().price | currency:'ARS':'symbol':'1.0-0' }}
                 </span>
-                <span class="precio-nuevo">
+                <span class="fw-bold fs-2 text-primary">
                 {{ precioActual() | currency:'ARS':'symbol':'1.0-0' }}
                 </span>
+                </div>
             } @else {
-                <span>{{ product().price | currency:'ARS':'symbol':'1.0-0' }}</span>
+                <span class="fw-bold fs-2 text-primary">{{ product().price | currency:'ARS':'symbol':'1.0-0' }}</span>
             }
         </div>
     </div>

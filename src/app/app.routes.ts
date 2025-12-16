@@ -6,6 +6,9 @@ import { Register } from './pages/register/register';
 import { publicCostumerGuard } from './guard/only-public-customer-guard-guard';
 import { AccountSettingsComponent } from './pages/account-settings/account-settings';
 import { onlyLoggedCostumerGuard } from './guard/only-logged-customer-guard-guard';
+import { ProductCard } from './components/product-card/product-card';
+import { ProductDetailModal } from './components/product-detail-modal/product-detail-modal';
+
 
 export const routes: Routes = [
     {
@@ -33,5 +36,13 @@ export const routes: Routes = [
         path: "perfil",
         component: AccountSettingsComponent,
         canActivate: [onlyLoggedCostumerGuard]
-    }
+    },
+    {
+        path: "products",
+        component: ProductCard,
+    },
+        {
+        path: "productsdetail",
+        component: ProductDetailModal,
+    },
 ];
