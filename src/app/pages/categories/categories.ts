@@ -21,11 +21,22 @@ export class CategoriesFormComponent implements OnInit {
   };
   isEditMode = false;
 
-  ngOnInit(): void {
-    if (this.categoryIdToEdit()) { 
+  async ngOnInit(): Promise<void> {
+    const id = this.categoryIdToEdit();
+    if (id) { 
     this.isEditMode = true;
-      }
+    try { 
+      const data = await this.categoriesService.getCategoryById(id);
+
+      this.categoryData = {
+        name: data.name,
+        description: data.description
+      };
+    } catch (error) {
+      console.error('Error al cargar categoría:', error);
+    }
   }
+}  
 
   async onSubmit() {
     try {

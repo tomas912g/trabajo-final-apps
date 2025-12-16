@@ -25,6 +25,12 @@ export class CategoriesService {
     });
 }
 
+async getCategoryById(id: number): Promise<CategoryId> {
+    const url = `${this.baseUrl}/categories/${id}`;
+    const headers = this.getHeaders();
+    return firstValueFrom(this.http.get<CategoryId>(url, { headers }));
+  }
+
 // obtiene todas las categorías asociadas al usuario logueado
 async getCategories(): Promise<CategoryId[]> { // promete devolver un array de categorías con ID
   const userId = this.authService.currentUserId; //recupera el ID del usuario actual

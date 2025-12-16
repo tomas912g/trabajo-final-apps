@@ -7,6 +7,11 @@
               <a routerLink="/menu" class="navbar-brand">
                   <span class="app-name fw-bold text-primary">Menú Digital</span>
               </a>
+              @if (isOwner) {
+                <button class="btn btn-success btn-sm" (click)="addNewProduct()">
+                  + Agregar Producto
+                </button>
+              }
           </div>
       </nav>
   <main class="menu-container container mt-4">
@@ -14,14 +19,25 @@
     <section class="categories-nav mb-4 w-100">
       <div class="d-flex flex-row overflow-x-auto pb-2 gap-2 w-100">
         @for (cat of categories; track cat.name) {
-          <button 
-          class="btn text-nowrap flex-fill"
-          [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
-          [class.btn-outline-success]="!(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
-          (click) = "selectCategory(cat.categoryId, cat.isDiscount)">
-          
-          {{ cat.name }}
-          </button>
+          <div class="d-flex flex-column align-items-center flex-fill">
+            <button 
+            class="btn text-nowrap w-100"
+            [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
+            [class.btn-outline-success]="!(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
+            (click) = "selectCategory(cat.categoryId, cat.isDiscount)">
+            {{ cat.name }}
+            </button>
+            @if (isOwner && cat.categoryId !== undefined) {
+              <div class="mt-1 d-flex gap-1">
+                <button class="btn btn-sm btn-light border text-primary py-0" (click)="editCategory(cat)" title="Editar">
+                  <small>Editar</small>
+                </button>
+                <button class="btn btn-sm btn-light border text-danger py-0" (click)="deleteCategory(cat.categoryId)" title="Eliminar">
+                  <small>Eliminar</small>
+                </button>
+              </div>
+            }
+          </div>
         }
       </div>
     </section>
@@ -38,6 +54,13 @@
               [product]="item" 
               (viewDetail)="openDetail($event)">
             </app-product-card>
+
+            @if (isOwner) {
+              <div class="d-flex justify-content-end gap-2 mt-2 px-2">
+                <button class="btn btn-sm btn-outline-primary" (click)="openDetail(item)">Editar</button>
+                <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(item.id)">Eliminar</button>
+              </div>
+            }
           </div>
         } @empty {
           <div class="col-12">
@@ -53,4 +76,22 @@
     [product]="selectedProduct!" 
     (close)="closeDetail()">
   </app-product-detail-modal>
+}
+
+@if (showCategoryForm) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal d-block show" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <app-categories 
+          [categoryIdToEdit]="categoryIdSelected">
+        </app-categories>
+        <div class="p-3 text-center">
+          <button class="btn btn-secondary w-100" (click)="showCategoryForm = false">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 }

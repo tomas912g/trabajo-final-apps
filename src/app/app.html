@@ -4,13 +4,20 @@
             <a class="navbar-brand fw-bold text-primary" routerLink="/restaurantList">
                 Restaurantes
             </a>
+            <div class="d-flex align-items-center gap-3">
+                @if (authService.token) {
+                    <a class="nav-link text-dark" [routerLink]="['/menu', authService.currentUserId]">
+                        <strong>Gestionar Mi Menú</strong>
+                    </a>
+                }
+            </div>
+
             <div class="d-flex gap-2">
                 @if (!authService.token) {
                     <a routerLink="/login" class="btn btn-outline-primary">Iniciar Sesión</a>
                     <a routerLink="/register" class="btn btn-primary">Registrarse</a>
                 }
                 @else {
-                    <a routerLink="/perfil" class="btn btn-outline-secondary">Mi Perfil</a>
                     <button (click)="logout()" class="btn btn-danger">Cerrar Sesión</button>
                 }
             </div>

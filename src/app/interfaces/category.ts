@@ -1,6 +1,7 @@
 export interface CategoryId {
     id: number;     
     name: string;
+    description: string;
 }
 
 export interface Category {
