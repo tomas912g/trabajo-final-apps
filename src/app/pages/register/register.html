@@ -17,18 +17,14 @@
                     <div class="row">
                         <div class="col-12 col-md-6 mb-3">
                             <label for="firstName" class="form-label fw-semibold">Nombre</label>
-                            <input id="firstName" name="firstName" type="text" ngModel required firstName #firstName="ngModel" autocomplete="firstName" class="form-control" placeholder= [class.is-invalid]="firstName.invalid && (firstName.dirty || firstName.touched)">
-                            @if (firstName.invalid && (firstName.dirty || firstName.touched)){
-                                <div class="invalid-feedback d-block">El nombre es obligatorio.</div>                                 
-                            }
+                            <input id="firstName" name="firstName" type="text" ngModel required firstName #firstName="ngModel" autocomplete="firstName" class="form-control" >
+                            
                         </div>
             
                         <div class="col-12 col-md-6 mb-3">
                             <label for="lastName" class="form-label fw-semibold">Apellido</label>
-                            <input id="lastName" name="lastName" type="text" ngModel required lastName #lastName="ngModel" autocomplete="lastName" class="form-control" placeholder= [class.is-invalid]="lastName.invalid && (lastName.dirty || lastName.touched)">
-                            @if (lastName.invalid && (lastName.dirty || lastName.touched)){
-                                <div class="invalid-feedback d-block">El apellido es obligatorio.</div>                                
-                            }
+                            <input id="lastName" name="lastName" type="text" ngModel required lastName #lastName="ngModel" autocomplete="lastName" class="form-control" >
+                            
                         </div>
                     </div>
 
