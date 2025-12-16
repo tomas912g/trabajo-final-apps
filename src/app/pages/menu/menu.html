@@ -4,13 +4,18 @@
   </header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
           <div class="container">
-              <a routerLink="/menu" class="navbar-brand">
+              <a routerLink="/menu:userId" class="navbar-brand">
                   <span class="app-name fw-bold text-primary">Menú Digital</span>
               </a>
               @if (isOwner) {
-                <button class="btn btn-success btn-sm" (click)="addNewProduct()">
+                <div class="d-flex gap-2"> 
+                  <button class="btn btn-primary btn-sm" (click)="addCategory()">
+                    + Nueva Categoría
+                  </button>
+                  <button class="btn btn-success btn-sm" (click)="addNewProduct()">
                   + Agregar Producto
-                </button>
+                  </button>
+                </div>
               }
           </div>
       </nav>
@@ -89,6 +94,30 @@
         <div class="p-3 text-center">
           <button class="btn btn-secondary w-100" (click)="showCategoryForm = false">
             Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showProductForm) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal d-block show" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">{{ productToEdit ? 'Editar Producto' : 'Nuevo Producto' }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="showProductForm = false"></button>
+        </div>
+        <div class="modal-body">
+          <p>Formulario para restaurante : {{ restaurantName }}</p>
+          <div class="mb-3">
+            <label class="form-label">Nombre del plato</label>
+            <input type="text" class="form-control" [value]="productToEdit?.name || ''">
+          </div>
+          <button class="btn btn-primary w-100" (click)="guardarCambios()">
+            Guardar Producto
           </button>
         </div>
       </div>

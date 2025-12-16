@@ -8,10 +8,11 @@ import { ProductDetailModal } from '../../components/product-detail-modal/produc
 import { UsersService } from '../../services/users-service';
 import { AuthService } from '../../services/auth-service';
 import { CategoriesFormComponent } from '../categories/categories';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',
-  imports: [Spinner, ProductCard, ProductDetailModal, CategoriesFormComponent],
+  imports: [Spinner, ProductCard, ProductDetailModal, CategoriesFormComponent, FormsModule],
   templateUrl: './menu.html',
   styleUrl: './menu.scss',
 })
@@ -22,16 +23,23 @@ export class Menu implements OnInit{
   userService = inject(UsersService); // logica de servicio de usuarios
   authService = inject(AuthService)
 
-  restaurantId! : number; //para almacenar el ID numerico, previamente al constructor
-  restaurantName: string = "";
-  menu: Product[]= []; //array de productos
-  isLoading : boolean = true; //mostrar spinner de carga
-  selectedProduct: Product | null = null; //producto seleccionado para ver detalle
+  restaurantId!: number; 
+  restaurantName: string = "";//para almacenar el ID numerico, previamente al constructor
+  menu: Product[] = [];//array de productos
+  isLoading: boolean = true;//mostrar spinner de carga
   isOwner: boolean = false;
+
+  selectedProduct: Product | null = null; //producto seleccionado para ver detalle
   showProductForm: boolean = false;
   productToEdit: Product | null = null;
   showCategoryForm: boolean = false;
   categoryIdSelected: number | null = null;
+
+  nuevoProducto = {
+    nombre: '',
+    precio: 0,
+    categoryId: undefined as number | undefined
+  };
 
   //variables de Estado para el filtrado
   currentCategoryId: number | undefined = undefined; // Guarda la categoría seleccionada por el usuario
@@ -64,6 +72,13 @@ export class Menu implements OnInit{
     });
     }
 
+    addCategory() {
+      if (this.isOwner) {
+        this.categoryIdSelected = null; 
+        this.showCategoryForm = true;  
+      }
+    }
+
     editCategory(category: any) {
       if (!this.isOwner) return;
       this.categoryIdSelected = category.categoryId; 
@@ -85,16 +100,46 @@ export class Menu implements OnInit{
     addNewProduct() {
       if (this.isOwner) {
         this.productToEdit = null;
+        this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined };
         this.showProductForm = true;
-        console.log("Abriendo formulario para nuevo producto en restaurante:", this.restaurantId);
+        
     }
   }
   openEditProduct(product: Product) {
     if (this.isOwner) {
       this.productToEdit = product;
+      this.nuevoProducto = { 
+        nombre: product.name, 
+        precio: product.price, 
+        categoryId: product.categoryId 
+      };
       this.showProductForm = true;
     }
   }
+
+  async guardarCambios() {
+  if (!this.isOwner) return;
+  try {
+    const datosProducto = {
+      nombre: this.nuevoProducto.nombre,
+      precio: this.nuevoProducto.precio,
+      categoryId: this.nuevoProducto.categoryId,
+      userId: this.restaurantId 
+    };
+    if (this.productToEdit) {
+      await this.inProduct.updateProduct(this.productToEdit.id, datosProducto);
+      alert("Producto actualizado correctamente");
+    } else {
+      await this.inProduct.createNewProduct(datosProducto);
+      alert("Producto creado correctamente");
+    }
+    this.showProductForm = false;
+    this.productToEdit = null;
+    await this.loadMenu();
+    } catch (error) {
+    alert("Hubo un error al guardar los cambios.");
+  }
+}
 
   async deleteProduct(productId: number) {
     if (!this.isOwner) return;
@@ -102,7 +147,6 @@ export class Menu implements OnInit{
       console.log("Producto a eliminar:", productId);
     }
   }
-
 
     async loadRestauranInfo(){
       try{
@@ -142,7 +186,6 @@ export class Menu implements OnInit{
   }
 }
 
-    
   openDetail(product: Product){
     this.selectedProduct = product;
   }
