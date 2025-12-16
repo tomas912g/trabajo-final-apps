@@ -5,6 +5,7 @@ import { Product } from '../../interfaces/product';
 import { Spinner } from '../../components/spinner/spinner';
 import { ProductCard } from '../../components/product-card/product-card';
 import { ProductDetailModal } from '../../components/product-detail-modal/product-detail-modal';
+import { UsersService } from '../../services/users-service'; 
 
 @Component({
   selector: 'app-menu',
@@ -16,8 +17,10 @@ import { ProductDetailModal } from '../../components/product-detail-modal/produc
 export class Menu implements OnInit{
   route = inject(ActivatedRoute) //saber que restaurante debe mostrar el menu. Obtenemos el ID
   inProduct = inject(ProductsService) // toda logica con backend 
+  userService = inject(UsersService); // logica de servicio de usuarios
 
   restaurantId! : number; //para almacenar el ID numerico, previamente al constructor
+  restaurantName: string = "";
   menu: Product[]= []; //array de productos
   isLoading : boolean = true; //mostrar spinner de carga
   selectedProduct: Product | null = null; //producto seleccionado para ver detalle
@@ -37,7 +40,7 @@ export class Menu implements OnInit{
   ];
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => { // async para poder usar await dentro
       //obtenemos el id del restaurante al cargar y lo convertimos en numero
       const userIdString = params['userId'];
       this.restaurantId = +userIdString // el + carga el string a numero
@@ -45,17 +48,28 @@ export class Menu implements OnInit{
       //Tenemos id, cargamos el menu
       if(this.restaurantId){
         this.loadMenu()
+        this.loadRestauranInfo()
       }
     });
+    }
+
+    async loadRestauranInfo(){
+      try{
+        const user = await this.userService.getUserProfile(this.restaurantId);
+        this.restaurantName = user.restaurantName;
+      } catch (error){
+        console.error("Error cargando la info del restaurante:", error);
+        this.restaurantName = "Restaurante";
+      }
   }
 
   selectCategory(categoryId: number | undefined, isDiscount: boolean){
     this.currentCategoryId = categoryId;
     this.currentIsDiscount = isDiscount;
-    this.LoadMenu();
+    this.loadMenu();
   }
 
-  async LoadMenu(){
+  async loadMenu(){
     this.isLoading = true; 
     try {
       const products = await this.inProduct.getProductsByRestaurant(
@@ -70,26 +84,7 @@ export class Menu implements OnInit{
       this.isLoading = false;
     }
   }  
-  
-  async loadMenu(){
-    this.isLoading = true;
-      try {
-
-        const products = await this.inProduct.getProductsByRestaurant(
-          this.restaurantId,
-          this.currentCategoryId,
-          this.currentIsDiscount
-        );
-        this.menu = products; 
-      }
-      catch (err) {
-        console.error("Error al cargar el menu: ", err);
-      }
-      finally{
-        this.isLoading = false;
-      }
-    }
-  
+    
   openDetail(product: Product){
     this.selectedProduct = product;
   }

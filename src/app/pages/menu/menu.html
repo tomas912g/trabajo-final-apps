@@ -1,23 +1,23 @@
 <div class="container-fluid p-0">
-  <header class="main-header bg-dark text-white p-3">
-      <h1 class="h4 mb-0 text-center"> Menu del restaurante {{ restaurantId }}</h1>
+  <header class="main-header bg-primary text-white p-3 shadow-sm">
+      <h1 class="h4 mb-0 text-center"> Menu del restaurante {{ restaurantName}}</h1>
   </header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
           <div class="container">
               <a routerLink="/menu" class="navbar-brand">
-                  <span class="app-name fw-bold">Menú Digital</span>
+                  <span class="app-name fw-bold text-primary">Menú Digital</span>
               </a>
-              <a routerLink="/register" class="btn btn-outline-success">Regístrate</a>
           </div>
       </nav>
   <main class="menu-container container mt-4">
 
-    <section class="categories-nav mb-4">
-      <div class="d-flex flex-row overflow-x-auto pb-2 gap-2">
+    <section class="categories-nav mb-4 w-100">
+      <div class="d-flex flex-row overflow-x-auto pb-2 gap-2 w-100">
         @for (cat of categories; track cat.name) {
           <button 
-          class="btn btn-sm text-nowrap"
-          [class.active]="currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount"
+          class="btn text-nowrap flex-fill"
+          [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
+          [class.btn-outline-success]="!(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
           (click) = "selectCategory(cat.categoryId, cat.isDiscount)">
           
           {{ cat.name }}
