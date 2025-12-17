@@ -69,8 +69,8 @@ export class AdminProducts implements OnInit{
 
   async onToggleFavorite(product: Product) {
   try {
-    await this.productsService.toggleProductFavorite(product.id);//llama al servicio
-    product.isFavorite = !product.isFavorite;//actualizar el estado para mostrar el cambio inmediatamente
+    await this.productsService.toggleProductFavorite(product.id);
+    product.isFavorite = !product.isFavorite;
     } catch (error) {
     console.error(error);
     }

@@ -13,7 +13,7 @@ export class ProductsService {
   // verifica la existencia de un Token valido
     getAuthHeaders(){
       let token = this.authService.token || localStorage.getItem("token");
-      if (token && token.includes('{"token":')) {
+      if (token && token.includes('"token"')) {
      try {
        const parsed = JSON.parse(token);
        token = parsed.token; // Nos quedamos solo con el código limpio
@@ -21,15 +21,12 @@ export class ProductsService {
        console.error("Error limpiando el token:", e);
      }
   }
-
   return {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}` 
   };
 }
     
-
-
   async getProductsByRestaurant(
     userId : number, categoryId? : number, onylDiscount: boolean = false ): Promise<Product[]> {
     let res =`${this.URL_BASE}/users/${userId}/products`; // URL inicial a la que se agregaran los filtros.

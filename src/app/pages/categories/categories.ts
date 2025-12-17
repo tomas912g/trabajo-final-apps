@@ -14,7 +14,6 @@ export class CategoriesFormComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
   categoryIdToEdit = input<number | null>(null);
 
-  // tipos de datos del formulario
   categoryData: Category = {
     name: '',
     description: ''

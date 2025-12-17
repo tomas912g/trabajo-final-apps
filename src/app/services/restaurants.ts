@@ -19,6 +19,7 @@ export class RestaurantService {
             'Authorization': `Bearer ${token}` //
         };
     }
+    
   async getRestaurants(): Promise<Restaurant[]> { // promete devolver una array de restaurantes
     const res = await fetch(this.URL_BASE);// peticion para obtener todos los restaurantes
 
@@ -27,8 +28,8 @@ export class RestaurantService {
     return await res.json();// si la respuesta fue exitosa, devuelve la lista de restaurantes
   }
 
-  async toggleRestaurantFavorite(restaurantId: number): Promise<void> {//acepta el restaurantId
-    const url = `${this.URL_BASE.replace('/users/', '/restaurants/')}/${restaurantId}/favorite`;// se construye la url
+async toggleRestaurantFavorite(restaurantId: number): Promise<void> {//acepta el restaurantId
+    const url = `https://w370351.ferozo.com/api/restaurants/${restaurantId}/favorite`;
     const headers = this.getAuthHeaders();// obtiene el token
 
     const res = await fetch(url, {// hace una peticion PUT a la URL construida
