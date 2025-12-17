@@ -29,10 +29,6 @@ export class Profile implements OnInit{
     phoneNumber: ""
   };
 
-  // cree una instancia personalizada de SweetAlert que ya trae las clases de Bootstrap configuradas
-  //esto esta documentado en la pagina oficial de la librería como la "Manera recomendada"  
-  // para mantener la consistencia visual del diseño sin agregar dependencias pesadas
-  // Fuente: https://sweetalert2.github.io/#bootstrap-integration
   private swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success me-2",
@@ -62,7 +58,7 @@ export class Profile implements OnInit{
       this.dataProfile.phoneNumber = user.phoneNumber;
       this.dataProfile.email = user.email
       this.dataProfile.address = user.address || "";
-      this.dataProfile.password = ""; //contraseña vacia a proposito para no mostrar la encriptada
+      this.dataProfile.password = ""; 
       } catch (error){
         console.error(error);
         this.router.navigate(['/login']);
@@ -76,7 +72,7 @@ export class Profile implements OnInit{
 
     this.isLoading = true;
     try{
-      const datos: any = { ...this.dataProfile }; //copia de datos 
+      const datos: any = { ...this.dataProfile }; 
       if(datos.password == ""){
         delete datos.password}
     

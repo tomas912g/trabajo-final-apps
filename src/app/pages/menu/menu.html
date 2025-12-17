@@ -116,6 +116,20 @@
             <label class="form-label fw-bold">Precio $</label>
             <input type="number" class="form-control" [(ngModel)]="nuevoProducto.precio" placeholder="0.00">
           </div>
+          <div class = "row mb-3">
+            <div class="col-6">
+              <label class="form-label fw-bold text-danger">Descuento%</label>
+              <input type="number" class="form-control" [(ngModel)]="nuevoProducto.descuento" placeholder="Ej: 10" max="100">
+            </div>
+            <div class="col-6 d-flex align-items-center pt-4">
+              <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="happyHourSwitch" [(ngModel)]="nuevoProducto.happyHour">
+                <label class="form-check-label fw-bold text-primary" for="happyHourSwitch">
+                  HappyHour
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="mb-3 p-3 bg-light border rounded">
             <label class="form-label fw-bold text-primary">Categoría</label>
             @if (!usarNuevaCategoria) {

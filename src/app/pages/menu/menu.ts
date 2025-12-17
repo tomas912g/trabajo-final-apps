@@ -38,14 +38,16 @@ export class Menu implements OnInit{
   nuevoProducto = {
     nombre: '',
     precio: 0,
-    categoryId: undefined as number | undefined
+    categoryId: undefined as number | undefined,
+    descuento: 0,
+    happyHour: false,
   };
   usarNuevaCategoria: boolean = false;
   nombreNuevaCategoria: string = '';
 
-  //variables de Estado para el filtrado
-  currentCategoryId: number | undefined = undefined; // Guarda la categoría seleccionada por el usuario
-  currentIsDiscount: boolean = false; //Guarda si el usuario ha activado el filtro de ofertas
+
+  currentCategoryId: number | undefined = undefined; 
+  currentIsDiscount: boolean = false; 
   currentIsHappyHour: boolean = false;
 
 
@@ -56,12 +58,11 @@ export class Menu implements OnInit{
   ];
 
   ngOnInit(): void {
-    this.route.params.subscribe(async params => { // async para poder usar await dentro
-      //obtenemos el id del restaurante al cargar y lo convertimos en numero
+    this.route.params.subscribe(async params => { 
       const userIdString = params['userId'];
-      this.restaurantId = +userIdString // el + carga el string a numero
+      this.restaurantId = +userIdString 
 
-      //Tenemos id, cargamos el menu
+      
       if(this.restaurantId){
         this.isOwner = this.authService.currentUserId === this.restaurantId;
         await this.loadMenuinitial();
@@ -74,9 +75,9 @@ export class Menu implements OnInit{
       this.isLoading = true;
       try {
         const data = await this.inProduct.getProductsByRestaurant(this.restaurantId);
-      this.allProducts = data; // Guardamos todo en la lista maestra
-      this.menu = data;        // Al principio mostramos todo
-      this.extractCategories(data); // Generamos los botones dinámicamente
+      this.allProducts = data; 
+      this.menu = data;       
+      this.extractCategories(data); 
       } catch (err) {
       console.error("Error cargando menú:", err);
     } finally {
@@ -85,16 +86,14 @@ export class Menu implements OnInit{
   }
 
   async extractCategories(products: Product[]) {
-    // Usamos un Map para no repetir categorías
-    const uniqueCategories = new Map<number, string>(); //map es un diccionario que no permite claves repetidas
+    const uniqueCategories = new Map<number, string>(); 
   products.forEach(p => {
-      // Si el producto tiene ID de categoría y Nombre de categoría
+
       if (p.categoryId && p.categoryName) {
         uniqueCategories.set(p.categoryId, p.categoryName);
       }
     });
 
-    // Convertimos el mapa en botones y los agregamos al array
     uniqueCategories.forEach((name, id) => {
       this.categories.push({
         name: name,
@@ -154,7 +153,7 @@ export class Menu implements OnInit{
     addNewProduct() {
       if (this.isOwner) {
         this.productToEdit = null;
-        this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined };
+        this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined, descuento: 0, happyHour:false };
         this.showProductForm = true;
         
     }
@@ -166,7 +165,9 @@ export class Menu implements OnInit{
       this.nuevoProducto = { 
         nombre: product.name, 
         precio: product.price, 
-        categoryId: product.categoryId 
+        categoryId: product.categoryId,
+        descuento: product.isDiscount || 0,
+        happyHour: product.isHappyHour || false
       };
       this.showProductForm = true;
     }
@@ -193,7 +194,9 @@ export class Menu implements OnInit{
       name: this.nuevoProducto.nombre,
       price: this.nuevoProducto.precio,
       categoryId: finalCategoryId,
-      userId: this.restaurantId
+      userId: this.restaurantId,
+      isDiscount: this.nuevoProducto.descuento,
+      isHappyHour: this.nuevoProducto.happyHour,
     };
 
     if (this.productToEdit) {
@@ -208,7 +211,7 @@ export class Menu implements OnInit{
     this.productToEdit = null;
     this.usarNuevaCategoria = false;
     this.nombreNuevaCategoria = '';
-    this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined };
+    this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined, descuento: 0, happyHour: false };
 
     await this.loadMenuinitial();
 
@@ -222,12 +225,10 @@ export class Menu implements OnInit{
     if (!this.isOwner) return;
     if (confirm("¿Eliminar este producto?")) {
       try {
-      console.log("Borrando ID:", productId); // <--- Espía
-      
-      // Llamamos al servicio
+      console.log("Borrando ID:", productId); 
+           
       await this.inProduct.deleteProduct(productId);
       
-      // RECARGAMOS LA LISTA para ver que desapareció
       await this.loadMenuinitial(); 
       
       alert("Producto eliminado.");

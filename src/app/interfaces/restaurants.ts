@@ -7,4 +7,3 @@ export interface Restaurant {
     category?: string,
     isFavorite?: boolean,
 }
-//para que sepa la forma de los datos en caso de que la API llame con otro nombre

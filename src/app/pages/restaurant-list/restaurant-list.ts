@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class RestaurantList implements OnInit{
   restaurantService = inject(RestaurantService)
-  restaurants: Restaurant[] = []; //variables que guardan la lista que recibimos
+  restaurants: Restaurant[] = []; 
   isLoading: boolean = true;
 
   async ngOnInit() {

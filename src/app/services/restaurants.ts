@@ -1,39 +1,39 @@
 import { inject, Injectable } from '@angular/core';
 import { Restaurant } from '../interfaces/restaurants';
 import { AuthService } from './auth-service';
-//servicio que vaya a la API y traiga la lista
+
 @Injectable({
   providedIn: 'root',
 })
 export class RestaurantService {
   authService = inject(AuthService);
-  readonly URL_BASE = "https://w370351.ferozo.com/api/users"; //obtiene los restaurantes registrados
+  readonly URL_BASE = "https://w370351.ferozo.com/api/users";
 
   getAuthHeaders(): { [key: string]: string } {
-        const token = this.authService.token || localStorage.getItem("token"); //busca el token. Primero en en authService y sino en localStorage
+        const token = this.authService.token || localStorage.getItem("token");
         if (!token) {
-          throw new Error('No hay sesión activa para realizar esta operación.');// si no se encuentra el token lanza este error
+          throw new Error('No hay sesión activa para realizar esta operación.');
         }
-        return {// si existe el token devuelve el token en formato bearer
+        return {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` //
+            'Authorization': `Bearer ${token}` 
         };
     }
     
-  async getRestaurants(): Promise<Restaurant[]> { // promete devolver una array de restaurantes
-    const res = await fetch(this.URL_BASE);// peticion para obtener todos los restaurantes
+  async getRestaurants(): Promise<Restaurant[]> { 
+    const res = await fetch(this.URL_BASE);
 
     if(!res.ok) throw new Error("Error al cargar los restaurantes");
     
-    return await res.json();// si la respuesta fue exitosa, devuelve la lista de restaurantes
+    return await res.json();
   }
 
-async toggleRestaurantFavorite(restaurantId: number): Promise<void> {//acepta el restaurantId
+async toggleRestaurantFavorite(restaurantId: number): Promise<void> {
     const url = `https://w370351.ferozo.com/api/restaurants/${restaurantId}/favorite`;
-    const headers = this.getAuthHeaders();// obtiene el token
+    const headers = this.getAuthHeaders();
 
-    const res = await fetch(url, {// hace una peticion PUT a la URL construida
-        method: "PUT", // para alternar el estado
+    const res = await fetch(url, {
+        method: "PUT", 
         headers: headers,
     });
     

@@ -10,12 +10,9 @@ import { Product } from '../../interfaces/product';
   styleUrl: './product-card.scss',
 })
 export class ProductCard {
-  // Producto a mostrar
   product = input.required<Product>();
 
-  // Opcional: para cerrar si lo usás dentro de un modal
   viewDetail = output<Product>();
-  // Flags derivados
   readonly esDestacado = computed(() => !!this.product().isFeatured);
   readonly esHappyHour = computed(() => !!this.product().isHappyHour);
 
@@ -23,7 +20,6 @@ export class ProductCard {
     () => this.esHappyHour() || this.#porcentaje(this.product().isDiscount) > 0
   );
 
-  // Precio actual aplicando solo el porcentaje isDiscount (0..100)
   readonly precioActual = computed(() => {
     const p = this.product();
     const porc = this.#porcentaje(p.isDiscount);

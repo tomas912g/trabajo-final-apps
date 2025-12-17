@@ -66,14 +66,4 @@ export class AdminProducts implements OnInit{
       alert ("No se pudo actualizar el descuento")
     }
   }
-
-  async onToggleFavorite(product: Product) {
-  try {
-    await this.productsService.toggleProductFavorite(product.id);
-    product.isFavorite = !product.isFavorite;
-    } catch (error) {
-    console.error(error);
-    }
-  }
-
 }

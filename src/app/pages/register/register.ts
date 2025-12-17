@@ -35,7 +35,6 @@ export class Register {
     }
   this.isLoading = true;
   try {
-    // Generamos un email ficticio único para que el servidor en ferozo.com lo acepte
     const randomId = Date.now(); 
     const cleanName = restaurantName.toLowerCase().replace(/\s+/g, '');
     const fakeEmail = `${cleanName}@sin-email.com`
