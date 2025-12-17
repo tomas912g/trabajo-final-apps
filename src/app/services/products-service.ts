@@ -12,12 +12,23 @@ export class ProductsService {
   authService = inject(AuthService);
   // verifica la existencia de un Token valido
     getAuthHeaders(){
-      const token = this.authService.token || localStorage.getItem("token");
-    return {
-      'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // indca que el cliente tiene permiso para acceder
-    };
+      let token = this.authService.token || localStorage.getItem("token");
+      if (token && token.includes('{"token":')) {
+     try {
+       const parsed = JSON.parse(token);
+       token = parsed.token; // Nos quedamos solo con el código limpio
+     } catch (e) {
+       console.error("Error limpiando el token:", e);
+     }
+  }
+
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}` 
+  };
 }
+    
+
 
   async getProductsByRestaurant(
     userId : number, categoryId? : number, onylDiscount: boolean = false ): Promise<Product[]> {
@@ -41,7 +52,9 @@ export class ProductsService {
     if(!ans.ok) throw new Error("Error al obtener los productos");// verifica si la respuesta HTTP es exitosa
     return await ans.json();
   }
-                                //el objeto puede contener solo algunas de las propiedades de la interfaz
+
+
+   //el objeto puede contener solo algunas de las propiedades de la interfaz
   async createNewProduct(product: Partial<Product>): Promise<Product> {
     const res = await fetch(`${this.URL_BASE}/products`, { // inicio dr la peticion
       method: "POST",
@@ -60,6 +73,26 @@ export class ProductsService {
     });
     if (!res.ok) throw new Error("Error al actualizar el producto");
   }
+
+  async createCategory(name: string, restaurntId:number): Promise<any> {
+    const url = `${this.URL_BASE}/categories`;
+    const headers = this.getAuthHeaders();
+    console.log("Token enviado:", headers['Authorization']);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: headers, 
+    body: JSON.stringify({ name: name,
+      userId: restaurntId
+    })
+  });
+  if (!response.ok) {
+    const errorBody = await response.text(); 
+    console.error("Error del servidor:", errorBody);
+    throw new Error('Error al crear la categoría');
+  }
+  return await response.json();
+} 
 
   async deleteProduct(productId: number): Promise<void> { // solo necesita el id del producto a eliminar
     const res = await fetch(`${this.URL_BASE}/products/${productId}`, { // construye la URL para apuntar al recurso específico mediante el id

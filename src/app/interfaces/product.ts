@@ -4,6 +4,7 @@
         description: string, 
         price: number,
         categoryId: number,
+        categoryName?: string,
         imageUrl?: string,
         isFeatured: boolean, //para los destacados
         isDiscount: number, //para los descuentos. Ninguno de estos dos son opcionales ya que es necesario saber su estado por defecto

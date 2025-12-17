@@ -9,9 +9,6 @@
               </a>
               @if (isOwner) {
                 <div class="d-flex gap-2"> 
-                  <button class="btn btn-primary btn-sm" (click)="addCategory()">
-                    + Nueva Categoría
-                  </button>
                   <button class="btn btn-success btn-sm" (click)="addNewProduct()">
                   + Agregar Producto
                   </button>
@@ -23,22 +20,22 @@
 
     <section class="categories-nav mb-4 w-100">
       <div class="d-flex flex-row overflow-x-auto pb-2 gap-2 w-100">
-        @for (cat of categories; track cat.name) {
-          <div class="d-flex flex-column align-items-center flex-fill">
+        @for (cat of categories; track $index) {
+          <div class="d-flex flex-column align-items-center flex-fill" style="min-width: 120px;">
             <button 
             class="btn text-nowrap w-100"
-            [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
-            [class.btn-outline-success]="!(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount)"
-            (click) = "selectCategory(cat.categoryId, cat.isDiscount, cat.isHappyHour || false)">
+            [class.btn-success]="(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount && currentIsHappyHour === (cat.isHappyHour || false))"
+            [class.btn-outline-success]="!(currentCategoryId === cat.categoryId && currentIsDiscount === cat.isDiscount && currentIsHappyHour === (cat.isHappyHour || false))"
+            (click) = "selectcategory(cat.categoryId, cat.isDiscount, cat.isHappyHour || false)">
             {{ cat.name }}
             </button>
             @if (isOwner && cat.categoryId !== undefined) {
-              <div class="mt-1 d-flex gap-1">
+              <div class="mt-1 d-flex gap-1 w-100 justify-content-center">
                 <button class="btn btn-sm btn-light border text-primary py-0" (click)="editCategory(cat)" title="Editar">
-                  <small>Editar</small>
+                  <small><i class="bi bi-pencil"></i>Editar</small>
                 </button>
                 <button class="btn btn-sm btn-light border text-danger py-0" (click)="deleteCategory(cat.categoryId)" title="Eliminar">
-                  <small>Eliminar</small>
+                  <small><i class="bi bi-trash"></i>Eliminar</small>
                 </button>
               </div>
             }
@@ -53,7 +50,7 @@
           </div>
       } @else {
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 products-list">
-        @for (item of menu; track item.id) {
+        @for (item of menu; track $index) {
           <div class="col">
             <app-product-card 
               [product]="item" 
@@ -61,7 +58,7 @@
             </app-product-card>
 
             @if (isOwner) {
-              <div class="d-flex justify-content-end gap-2 mt-2 px-2">
+              <div class="d-flex justify-content-end gap-2 mt-2 px-2 rounded">
                 <button class="btn btn-sm btn-outline-primary" (click)="openDetail(item)">Editar</button>
                 <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(item.id)">Eliminar</button>
               </div>
@@ -111,12 +108,45 @@
           <button type="button" class="btn-close btn-close-white" (click)="showProductForm = false"></button>
         </div>
         <div class="modal-body">
-          <p>Formulario para restaurante : {{ restaurantName }}</p>
           <div class="mb-3">
             <label class="form-label">Nombre del plato</label>
-            <input type="text" class="form-control" [value]="productToEdit?.name || ''">
+            <input type="text" class="form-control" [(ngModel)]="nuevoProducto.nombre" placeholder="Ej: Milanesa a caballo">
           </div>
-          <button class="btn btn-primary w-100" (click)="guardarCambios()">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Precio $</label>
+            <input type="number" class="form-control" [(ngModel)]="nuevoProducto.precio" placeholder="0.00">
+          </div>
+          <div class="mb-3 p-3 bg-light border rounded">
+            <label class="form-label fw-bold text-primary">Categoría</label>
+            @if (!usarNuevaCategoria) {
+              <select [(ngModel)]="nuevoProducto.categoryId" class="form-select mb-2">
+                <option [ngValue]="undefined">Seleccione una categoría...</option>
+                @for (cat of categories; track $index) {
+                  @if(cat.categoryId) {
+                    <option [value]="cat.categoryId">{{ cat.name }}</option>
+                  }
+                }
+              </select>
+            }
+
+            @if (usarNuevaCategoria) {
+              <div class="mb-2">
+                <input type="text" 
+                       [(ngModel)]="nombreNuevaCategoria" 
+                       class="form-control border-success" 
+                       placeholder="Escribe el nombre de la nueva categoría...">
+              </div>
+            }
+
+            <div class="form-check form-switch mt-2">
+              <input class="form-check-input" type="checkbox" id="checkNuevaCat" [(ngModel)]="usarNuevaCategoria">
+              <label class="form-check-label text-muted small" for="checkNuevaCat">
+                {{ usarNuevaCategoria ? 'Cancelar creación (Usar existente)' : 'Quiero crear una categoría nueva ahora mismo' }}
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100 py-2 fw-bold shadow-sm" (click)="guardarCambios()">
             Guardar Producto
           </button>
         </div>

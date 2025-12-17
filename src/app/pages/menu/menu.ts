@@ -25,10 +25,10 @@ export class Menu implements OnInit{
 
   restaurantId!: number; 
   restaurantName: string = "";//para almacenar el ID numerico, previamente al constructor
+  allProducts: Product[] = [];
   menu: Product[] = [];//array de productos
   isLoading: boolean = true;//mostrar spinner de carga
   isOwner: boolean = false;
-
   selectedProduct: Product | null = null; //producto seleccionado para ver detalle
   showProductForm: boolean = false;
   productToEdit: Product | null = null;
@@ -40,6 +40,8 @@ export class Menu implements OnInit{
     precio: 0,
     categoryId: undefined as number | undefined
   };
+  usarNuevaCategoria: boolean = false;
+  nombreNuevaCategoria: string = '';
 
   //variables de Estado para el filtrado
   currentCategoryId: number | undefined = undefined; // Guarda la categoría seleccionada por el usuario
@@ -47,14 +49,10 @@ export class Menu implements OnInit{
   currentIsHappyHour: boolean = false;
 
 
-  categories = [
-    {name: "Promociones", categoryId: undefined, isDiscount: true},
-    {name: "Happy Hour", categoryId: undefined, isHappyHour: true, isDiscount: false},
-    {name: "Entradas", categoryId: 1, isDiscount: false},
-    {name: "Plato Principal", categoryId: 2, isDiscount: false},
-    {name: "Bebidas", categoryId: 4, isDiscount: false},
-    {name: "Vinos", categoryId: 5, isDiscount: false},
-    {name: "Postres", categoryId: 6, isDiscount: false},
+  categories: any[] = [
+    { name: "Todos", categoryId: undefined, isDiscount: false },
+    { name: "Promociones", categoryId: undefined, isDiscount: true },
+    { name: "Happy Hour", categoryId: undefined, isDiscount: false, isHappyHour: true },
   ];
 
   ngOnInit(): void {
@@ -66,11 +64,67 @@ export class Menu implements OnInit{
       //Tenemos id, cargamos el menu
       if(this.restaurantId){
         this.isOwner = this.authService.currentUserId === this.restaurantId;
-        this.loadMenu()
+        await this.loadMenuinitial();
         this.loadRestauranInfo()
       }
     });
     }
+
+    async loadMenuinitial(){
+      this.isLoading = true;
+      try {
+        const data = await this.inProduct.getProductsByRestaurant(this.restaurantId);
+      this.allProducts = data; // Guardamos todo en la lista maestra
+      this.menu = data;        // Al principio mostramos todo
+      this.extractCategories(data); // Generamos los botones dinámicamente
+      } catch (err) {
+      console.error("Error cargando menú:", err);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async extractCategories(products: Product[]) {
+    // Usamos un Map para no repetir categorías
+    const uniqueCategories = new Map<number, string>(); //map es un diccionario que no permite claves repetidas
+  products.forEach(p => {
+      // Si el producto tiene ID de categoría y Nombre de categoría
+      if (p.categoryId && p.categoryName) {
+        uniqueCategories.set(p.categoryId, p.categoryName);
+      }
+    });
+
+    // Convertimos el mapa en botones y los agregamos al array
+    uniqueCategories.forEach((name, id) => {
+      this.categories.push({
+        name: name,
+        categoryId: id,
+        isDiscount: false
+      });
+    });
+  }
+
+  selectcategory(categoryId: number | undefined, isDiscount: boolean, isHappyHour: boolean = false){
+    this.currentCategoryId = categoryId;
+    this.currentIsDiscount = isDiscount;
+    this.currentIsHappyHour = isHappyHour
+
+    let filtered = this.allProducts;
+
+    if(categoryId !== undefined){
+      filtered = filtered.filter(p => p.categoryId === categoryId);
+    }
+
+    if (isDiscount) {
+      filtered = filtered.filter(p => p.isDiscount || p.isDiscount > 0); 
+    }
+
+    if (isHappyHour) {
+      filtered = filtered.filter(p => p.isHappyHour === true);
+    }
+
+    this.menu = filtered;
+  }
 
     addCategory() {
       if (this.isOwner) {
@@ -107,6 +161,7 @@ export class Menu implements OnInit{
   }
   openEditProduct(product: Product) {
     if (this.isOwner) {
+      console.log("Editando producto:", product);
       this.productToEdit = product;
       this.nuevoProducto = { 
         nombre: product.name, 
@@ -120,31 +175,66 @@ export class Menu implements OnInit{
   async guardarCambios() {
   if (!this.isOwner) return;
   try {
+    let finalCategoryId = this.nuevoProducto.categoryId;
+    if (this.usarNuevaCategoria && this.nombreNuevaCategoria) {
+      const nuevaCat = await this.inProduct.createCategory(
+        this.nombreNuevaCategoria,
+        this.restaurantId
+      );
+      finalCategoryId = nuevaCat.id; 
+    }
+
+    if (finalCategoryId === undefined) {
+      alert("Por favor, selecciona una categoría o crea una nueva.");
+      return;
+    }
+
     const datosProducto = {
-      nombre: this.nuevoProducto.nombre,
-      precio: this.nuevoProducto.precio,
-      categoryId: this.nuevoProducto.categoryId,
-      userId: this.restaurantId 
+      name: this.nuevoProducto.nombre,
+      price: this.nuevoProducto.precio,
+      categoryId: finalCategoryId,
+      userId: this.restaurantId
     };
+
     if (this.productToEdit) {
       await this.inProduct.updateProduct(this.productToEdit.id, datosProducto);
-      alert("Producto actualizado correctamente");
-    } else {
+      alert("Producto actualizado exitosamente");
+    } else { 
       await this.inProduct.createNewProduct(datosProducto);
-      alert("Producto creado correctamente");
+      alert("Producto creado exitosamente");
     }
+
     this.showProductForm = false;
     this.productToEdit = null;
-    await this.loadMenu();
+    this.usarNuevaCategoria = false;
+    this.nombreNuevaCategoria = '';
+    this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined };
+
+    await this.loadMenuinitial();
+
     } catch (error) {
-    alert("Hubo un error al guardar los cambios.");
+    console.error("detalle del error:", error);
+    alert("No se pudo guardar el producto.");
   }
 }
 
   async deleteProduct(productId: number) {
     if (!this.isOwner) return;
     if (confirm("¿Eliminar este producto?")) {
-      console.log("Producto a eliminar:", productId);
+      try {
+      console.log("Borrando ID:", productId); // <--- Espía
+      
+      // Llamamos al servicio
+      await this.inProduct.deleteProduct(productId);
+      
+      // RECARGAMOS LA LISTA para ver que desapareció
+      await this.loadMenuinitial(); 
+      
+      alert("Producto eliminado.");
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      alert("No se pudo eliminar el producto.");
+    }
     }
   }
 
@@ -158,13 +248,6 @@ export class Menu implements OnInit{
       }
   }
 
-  selectCategory(categoryId: number | undefined, isDiscount: boolean, isHappyHour: boolean = false){
-    this.currentCategoryId = categoryId;
-    this.currentIsDiscount = isDiscount;
-    this.currentIsHappyHour = isHappyHour
-    this.loadMenu();
-    
-  }
   
   async loadMenu(){
     this.isLoading = true; 
