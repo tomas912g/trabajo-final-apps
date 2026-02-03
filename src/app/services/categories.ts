@@ -1,61 +1,65 @@
 import { inject, Injectable } from '@angular/core';
 import { Category, CategoryId } from '../interfaces/category';
 import { AuthService } from './auth-service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriesService {
-
-  private http = inject(HttpClient);
   private authService = inject(AuthService); 
   private baseUrl = "https://w370351.ferozo.com/api";
-  
-  private getHeaders(): HttpHeaders {
-    const token = this.authService.token || localStorage.getItem('token'); 
-    if (!token) {
-      throw new Error('No hay sesión activa');
-    }
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}` 
+
+  async getCategories(): Promise <CategoryId[]> {
+    const userId = this.authService.currentUserId;
+    if (!userId) throw new Error('El ID de usuario no está disponible.'); //aseguramos que si hay un error sea manejado, throw new error detiene el programa
+    const res = await fetch(`${this.baseUrl}/users/${userId}/categories`, {
+      method: 'GET',
+      headers: this.authService.getAuthHeaders()
     });
-}
-
-async getCategoryById(id: number): Promise<CategoryId> {
-    const url = `${this.baseUrl}/categories/${id}`;
-    const headers = this.getHeaders();
-    return firstValueFrom(this.http.get<CategoryId>(url, { headers }));
-  }
-
-async getCategories(): Promise<CategoryId[]> {
-  const userId = this.authService.currentUserId; 
-  if (!userId) {
-      throw new Error('El ID de usuario no está disponible.');
+      if(!res.ok) throw new Error("Error al obtener categorias");
+      return await res.json();
     }
-    const url = `${this.baseUrl}/users/${userId!}/categories`; 
-  const headers = this.getHeaders(); 
-    
-    return firstValueFrom(this.http.get<CategoryId[]>(url, { headers }));
-}
+  
+
+  async getCategoryById(id: number): Promise<CategoryId> {
+    const res = await fetch(`${this.baseUrl}/categories/${id}`, {
+      method: 'GET',
+      headers: this.authService.getAuthHeaders()
+    });
+      if(!res.ok) throw new Error("Error al obtener la categoria");
+      return await res.json();
+    }
+
+  
 
 async createCategory(categoryData: Category): Promise<CategoryId> { 
-    const url = `${this.baseUrl}/categories`;
-    const headers = this.getHeaders();
-    return firstValueFrom(this.http.post<CategoryId>(url, categoryData, { headers })); 
+   const res = await fetch (`${this.baseUrl}/categories`, {
+    method: 'POST',
+    headers: this.authService.getAuthHeaders(),
+    body: JSON.stringify(categoryData)
+  });
+  if (!res.ok) throw new Error("Error al crear categoría");
+    return await res.json();
   }
 
 async updateCategory(id: number, categoryData: Category): Promise<any> { 
-    const url = `${this.baseUrl}/categories/${id}`;
-    const headers = this.getHeaders();
-    return firstValueFrom(this.http.put<any>(url, categoryData, { headers }));
-}
+    const res = await fetch (`${this.baseUrl}/categories/${id}`, { 
+      method: 'PUT',
+      headers: this.authService.getAuthHeaders(),
+      body: JSON.stringify(categoryData)
+    });
+if (!res.ok) throw new Error("Error al actualizar categoría");
+    return await res.json(); // O void si no devuelve nada
+  }
+
 
 async deleteCategory(id: number): Promise<void> {
-    const url = `${this.baseUrl}/categories/${id}`; 
-  const headers = this.getHeaders();
-    await firstValueFrom(this.http.delete<void>(url, { headers }));
+    const res = await fetch (`${this.baseUrl}/categories/${id}`, { 
+      method: 'DELETE',
+      headers: this.authService.getAuthHeaders(),
+      }); 
+      if(!res.ok) throw new Error("Error al eliminar categoría");
     }
-}
+  }

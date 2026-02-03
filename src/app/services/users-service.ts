@@ -10,13 +10,6 @@ export class UsersService {
   authService = inject(AuthService);
   readonly URL_BASE = 'https://w370351.ferozo.com/api/users';
   
-  getAuthHeaders(){
-    const token = this.authService.token || localStorage.getItem("token");
-  return {
-    'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-  };
-}
   async register(registerData: NewUser) { 
     const res = await fetch(this.URL_BASE,
     { 
@@ -29,8 +22,7 @@ export class UsersService {
   if (!res.ok){ 
       throw new Error("Error al registrar usuario"); 
     }
-    try{
-      return await res.json();
+    try {return await res.json();
     } catch{
       return {ok: true};
     }
@@ -40,8 +32,8 @@ export class UsersService {
     const res = await fetch(`${this.URL_BASE}/${userId}`, 
     {
       method: "GET", 
-      headers: this.getAuthHeaders()});
-
+      headers: this.authService.getAuthHeaders()
+    });
       if (!res.ok) throw new Error("Error al buscar el perfil");
       return await res.json();
   }
@@ -49,7 +41,7 @@ export class UsersService {
   async userProfileUpdate(userId: number, data: Partial<NewUser>): Promise<void>{ 
     const res = await fetch(`${this.URL_BASE}/${userId}`, {
       method: "PUT",
-      headers: this.getAuthHeaders(), 
+      headers: this.authService.getAuthHeaders(), 
       body: JSON.stringify(data)
     });
 
@@ -59,7 +51,7 @@ export class UsersService {
   async deleteUserProfile(userId: number): Promise<void>{
     const res = await fetch(`${this.URL_BASE}/${userId}`,{ 
       method: "DELETE",
-      headers: this.getAuthHeaders(),
+      headers: this.authService.getAuthHeaders(),
     });
     if (!res.ok) throw new Error("Error al querer eliminar el perfil")
   }
