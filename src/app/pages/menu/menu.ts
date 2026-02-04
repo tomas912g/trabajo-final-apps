@@ -9,6 +9,7 @@ import { UsersService } from '../../services/users-service';
 import { AuthService } from '../../services/auth-service';
 import { CategoriesFormComponent } from '../categories/categories';
 import { FormsModule } from '@angular/forms';
+import { CategoriesService } from '../../services/categories';
 
 @Component({
   selector: 'app-menu',
@@ -22,6 +23,7 @@ export class Menu implements OnInit{
   inProduct = inject(ProductsService) // toda logica con backend 
   userService = inject(UsersService); // logica de servicio de usuarios
   authService = inject(AuthService)
+  categoriesService = inject(CategoriesService)
 
   restaurantId!: number; 
   restaurantName: string = "";//para almacenar el ID numerico, previamente al constructor
@@ -46,7 +48,7 @@ export class Menu implements OnInit{
   nombreNuevaCategoria: string = '';
 
 
-  currentCategoryId: number | undefined = undefined; 
+  currentCategoryId: number | undefined  = undefined; 
   currentIsDiscount: boolean = false; 
   currentIsHappyHour: boolean = false;
 
@@ -103,7 +105,7 @@ export class Menu implements OnInit{
     });
   }
 
-  selectcategory(categoryId: number | undefined, isDiscount: boolean, isHappyHour: boolean = false){
+  selectcategory(categoryId: number | undefined , isDiscount: boolean, isHappyHour: boolean = false){
     this.currentCategoryId = categoryId;
     this.currentIsDiscount = isDiscount;
     this.currentIsHappyHour = isHappyHour
@@ -138,11 +140,12 @@ export class Menu implements OnInit{
       this.showCategoryForm = true;
     }
 
-    async deleteCategory(categoryId: number | undefined) {
-      if (!this.isOwner || categoryId === undefined) return;
+    async deleteCategory(categoryId: number) {
+      if (!this.isOwner) return;
       const confirmar = confirm("¿Estás seguro de que deseas eliminar esta categoría?");
       if (confirmar) {
         try {
+          await this.categoriesService.deleteCategory(categoryId)
           console.log('Categoría eliminada:', categoryId);
         } catch (error) {  
           console.error("Error al eliminar la categoría:", error);

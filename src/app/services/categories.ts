@@ -30,16 +30,16 @@ async getCategoryById(id: number): Promise<CategoryId> {
     return firstValueFrom(this.http.get<CategoryId>(url, { headers }));
   }
 
-async getCategories(): Promise<CategoryId[]> {
-  const userId = this.authService.currentUserId; 
-  if (!userId) {
-      throw new Error('El ID de usuario no está disponible.');
-    }
-    const url = `${this.baseUrl}/users/${userId!}/categories`; 
-  const headers = this.getHeaders(); 
+// async getCategories(): Promise<CategoryId[]> {
+//   const userId = this.authService.currentUserId; 
+//   if (!userId) {
+//       throw new Error('El ID de usuario no está disponible.');
+//     }
+//     const url = `${this.baseUrl}/users/${userId!}/categories`; 
+//   const headers = this.getHeaders(); 
     
-    return firstValueFrom(this.http.get<CategoryId[]>(url, { headers }));
-}
+//     return firstValueFrom(this.http.get<CategoryId[]>(url, { headers }));
+// }
 
 async createCategory(categoryData: Category): Promise<CategoryId> { 
     const url = `${this.baseUrl}/categories`;
@@ -53,9 +53,9 @@ async updateCategory(id: number, categoryData: Category): Promise<any> {
     return firstValueFrom(this.http.put<any>(url, categoryData, { headers }));
 }
 
-async deleteCategory(id: number): Promise<void> {
+async deleteCategory(id: number) {
     const url = `${this.baseUrl}/categories/${id}`; 
   const headers = this.getHeaders();
-    await firstValueFrom(this.http.delete<void>(url, { headers }));
+    return await firstValueFrom(this.http.delete<void>(url, { headers }));
     }
 }
