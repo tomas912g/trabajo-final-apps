@@ -64,7 +64,6 @@ export class Menu implements OnInit{
       const userIdString = params['userId'];
       this.restaurantId = +userIdString 
 
-      
       if(this.restaurantId){
         this.isOwner = this.authService.currentUserId === this.restaurantId;
         await this.loadMenuinitial();
@@ -88,9 +87,14 @@ export class Menu implements OnInit{
   }
 
   async extractCategories(products: Product[]) {
-    const uniqueCategories = new Map<number, string>(); 
-  products.forEach(p => {
+    this.categories = [ // reinicia la lista para evitar duplicados y define los filtros fijos de la aplicacion
+    { name: "Todos", categoryId: undefined, isDiscount: false },
+    { name: "Promociones", categoryId: undefined, isDiscount: true },
+    { name: "Happy Hour", categoryId: undefined, isDiscount: false, isHappyHour: true },
+  ];
 
+    const uniqueCategories = new Map<number, string>(); 
+    products.forEach(p => {
       if (p.categoryId && p.categoryName) {
         uniqueCategories.set(p.categoryId, p.categoryName);
       }
@@ -147,6 +151,8 @@ export class Menu implements OnInit{
         try {
           await this.categoriesService.deleteCategory(categoryId)
           console.log('Categoría eliminada:', categoryId);
+          await this.loadMenuinitial(); 
+          alert("Categoría eliminada con éxito");
         } catch (error) {  
           console.error("Error al eliminar la categoría:", error);
           }
@@ -181,11 +187,18 @@ export class Menu implements OnInit{
   try {
     let finalCategoryId = this.nuevoProducto.categoryId;
     if (this.usarNuevaCategoria && this.nombreNuevaCategoria) {
-      const nuevaCat = await this.inProduct.createCategory(
-        this.nombreNuevaCategoria,
-        this.restaurantId
+      const categoriaExistente = this.categories.find(
+        c => c.name.toLowerCase() === this.nombreNuevaCategoria.trim().toLowerCase()// se ignoran mayusculas o minusculas
       );
-      finalCategoryId = nuevaCat.id; 
+      if (categoriaExistente && categoriaExistente.categoryId !== undefined) {
+        finalCategoryId = categoriaExistente.categoryId; // si existe y tiene un ID real, se usa ese
+      } else { // si no existe se llama al servicio para crear la nueva categoria
+        const nuevaCat = await this.inProduct.createCategory(
+          this.nombreNuevaCategoria,
+          this.restaurantId
+        );
+        finalCategoryId = nuevaCat.id;
+      }
     }
 
     if (finalCategoryId === undefined) {
@@ -214,7 +227,13 @@ export class Menu implements OnInit{
     this.productToEdit = null;
     this.usarNuevaCategoria = false;
     this.nombreNuevaCategoria = '';
-    this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined, descuento: 0, happyHour: false };
+    this.nuevoProducto = { 
+      nombre: '', 
+      precio: 0, 
+      categoryId: undefined, 
+      descuento: 0, 
+      happyHour: false 
+    };
 
     await this.loadMenuinitial();
 
