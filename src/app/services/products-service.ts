@@ -70,6 +70,23 @@ export class ProductsService {
     if (!res.ok) throw new Error("Error al modificar el producto");
   }
 
+
+  async createCategory(name: string, userId: number): Promise<any>{
+    const url = `${this.URL_BASE}/categories`;
+    const res = await fetch(url,{
+      method: "POST",
+      headers: this.authService.getAuthHeaders(),
+      body: JSON.stringify({
+        name: name,
+        userId: userId
+      })
+    });
+    if (!res.ok) {
+      throw new Error( "Error al intentar crear la categoría")
+    }
+    return await res.json(); // cambia la respuesta del servidor en un objeto para obtener el ID de la nueva categoria
+  }
+
   async alternateHappyHour(productId: number): Promise<void> { 
     const res = await fetch(`${this.URL_BASE}/products/${productId}/happy-hour`, { 
       method: "PUT",
