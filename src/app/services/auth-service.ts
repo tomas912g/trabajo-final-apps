@@ -8,8 +8,34 @@ import { logindata } from '../interfaces/auth';
 
 export class AuthService {
   router = inject(Router)
-  token: null|string = localStorage.getItem("token");
+  token: string|null = localStorage.getItem("token");
   revisionTokenInterval:number|undefined;
+
+  constructor() {
+    if(this.token){
+      this.revisionTokenInterval = this.revisionToken()
+    }
+  }
+
+  getAuthHeaders(): { [key: string]: string } { // El objeto puede tener cualquier cant de propiedades con claves y valores string
+    let currentToken = this.token;
+    if (currentToken && currentToken.includes('"token"')) {
+      try {
+        const parsed = JSON.parse(currentToken) //Convierte un string JSON en un objeto JavaScript.
+        currentToken = parsed.token;
+    } catch(e){
+         console.error("Error limpiando el token:", e);
+       }
+    }
+    if (!currentToken){ //ejecuta si no hay token
+      return { 'Content-Type': 'application/json' }; // Devuelve los headers HTTP indicando que el contenido es JSON
+    }
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${currentToken}` 
+    };
+  }
+    
 
   get currentUserId(): number | null { 
     if (!this.token) return null; 
@@ -22,11 +48,6 @@ export class AuthService {
     }
   }
 
-  ngOnInit(): void{
-    if(this.token){
-      this.revisionTokenInterval = this.revisionToken()
-    }
-  }
   
   async login(loginData: logindata){
     const res = await fetch("https://w370351.ferozo.com/api/Authentication/login",
@@ -39,6 +60,7 @@ export class AuthService {
   if(res.ok){
     this.token = await res.text()
     localStorage.setItem("token", this.token)
+    this.revisionTokenInterval = this.revisionToken();
     return true;
   } else {
     return false
@@ -54,19 +76,17 @@ export class AuthService {
 
   revisionToken() {
     return setInterval(() => {
-      if (this.token) { 
-        const base64Url = this.token.split('.')[1]; 
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); 
-        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) { 
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); 
-        }).join(''));
-
-        const claims: { exp: number } = JSON.parse(jsonPayload); 
-        if (new Date(claims.exp * 1000) < new Date()) {
-          this.logout()
-        }
+      if (this.token) {
+        try { 
+          const claims = this.parseJwt(this.token);
+          if (claims.exp && (new Date (claims.exp * 1000) < new Date())){
+          this.logout();
       }
-    }, 10000) 
+        } catch (e){
+          this.logout(); // Si el token está corrupto, se cierra cesion
+      }
+    }
+    }, 10000);
   }
   
   parseJwt(token: string) {
@@ -79,3 +99,4 @@ export class AuthService {
     return JSON.parse(jsonPayload);
   }
 }
+
