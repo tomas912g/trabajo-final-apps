@@ -65,7 +65,7 @@ export class ProductsService {
     const res = await fetch(`${this.URL_BASE}/products/${productId}/discount`, { 
       method: "PUT",
       headers: this.authService.getAuthHeaders(),
-      body: JSON.stringify({discount: discount})
+      body: JSON.stringify({isDiscount: discount})
     });
     if (!res.ok) throw new Error("Error al modificar el producto");
   }
@@ -88,9 +88,10 @@ export class ProductsService {
   }
 
   async alternateHappyHour(productId: number): Promise<void> { 
-    const res = await fetch(`${this.URL_BASE}/products/${productId}/happy-hour`, { 
+    const res = await fetch(`${this.URL_BASE}/products/${productId}/happyhour`, { 
       method: "PUT",
       headers: this.authService.getAuthHeaders(),
+      body: JSON.stringify({}),
     });
     if (!res.ok) throw new Error("Error al cambiar estado de Happy Hour al producto");
   }

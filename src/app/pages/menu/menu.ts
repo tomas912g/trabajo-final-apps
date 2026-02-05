@@ -167,6 +167,7 @@ export class Menu implements OnInit{
         
     }
   }
+
   openEditProduct(product: Product) {
     if (this.isOwner) {
       console.log("Editando producto:", product);
@@ -187,19 +188,12 @@ export class Menu implements OnInit{
   try {
     let finalCategoryId = this.nuevoProducto.categoryId;
     if (this.usarNuevaCategoria && this.nombreNuevaCategoria) {
-      const categoriaExistente = this.categories.find(
-        c => c.name.toLowerCase() === this.nombreNuevaCategoria.trim().toLowerCase()// se ignoran mayusculas o minusculas
-      );
-      if (categoriaExistente && categoriaExistente.categoryId !== undefined) {
-        finalCategoryId = categoriaExistente.categoryId; // si existe y tiene un ID real, se usa ese
-      } else { // si no existe se llama al servicio para crear la nueva categoria
         const nuevaCat = await this.inProduct.createCategory(
           this.nombreNuevaCategoria,
           this.restaurantId
         );
         finalCategoryId = nuevaCat.id;
       }
-    }
 
     if (finalCategoryId === undefined) {
       alert("Por favor, selecciona una categoría o crea una nueva.");
@@ -211,17 +205,33 @@ export class Menu implements OnInit{
       price: this.nuevoProducto.precio,
       categoryId: finalCategoryId,
       userId: this.restaurantId,
-      isDiscount: this.nuevoProducto.descuento,
-      isHappyHour: this.nuevoProducto.happyHour,
     };
 
+    let idProductoFinalizado : number;
+
     if (this.productToEdit) {
-      await this.inProduct.updateProduct(this.productToEdit.id, datosProducto);
-      alert("Producto actualizado exitosamente");
+      idProductoFinalizado = this.productToEdit.id;
+      await this.inProduct.updateProduct(idProductoFinalizado, datosProducto);
     } else { 
-      await this.inProduct.createNewProduct(datosProducto);
-      alert("Producto creado exitosamente");
+      const productoCreado = await this.inProduct.createNewProduct(datosProducto);
+      idProductoFinalizado = productoCreado.id;
     }
+
+    const nuevoDescuento = this.nuevoProducto.descuento || 0;
+    const descuentoAnterior = this.productToEdit?.isDiscount || 0;
+
+    if(nuevoDescuento > 0 || nuevoDescuento !== descuentoAnterior) {
+      await this.inProduct.updateProductDiscount(idProductoFinalizado, nuevoDescuento);
+      }
+
+    const nuevoHappyHour = this.nuevoProducto.happyHour;
+    const tieneHappyHour = this.productToEdit?.isHappyHour || false;
+
+    if (nuevoHappyHour !== tieneHappyHour) {
+      await this.inProduct.alternateHappyHour(idProductoFinalizado);
+      }
+
+    alert(this.productToEdit ? "Producto actualizado correctamente" : "Producto creado correctamente");
 
     this.showProductForm = false;
     this.productToEdit = null;
