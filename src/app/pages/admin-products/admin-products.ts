@@ -61,6 +61,11 @@ export class AdminProducts implements OnInit{
     }
     try { 
       await this.productsService.updateProductDiscount(id, newDiscount);
+      const productoLocal = this.myProduct.find(p => p.id === id);
+      if (productoLocal) {
+        productoLocal.discount = newDiscount;
+        this.myProduct = [...this.myProduct];
+      }
       alert("Descuento actualizado");
     } catch(e){
       alert ("No se pudo actualizar el descuento")

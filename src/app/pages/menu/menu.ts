@@ -41,7 +41,7 @@ export class Menu implements OnInit{
     nombre: '',
     precio: 0,
     categoryId: undefined as number | undefined,
-    descuento: 0,
+    discount: 0,
     happyHour: false,
   };
   usarNuevaCategoria: boolean = false;
@@ -109,9 +109,9 @@ export class Menu implements OnInit{
     });
   }
 
-  selectcategory(categoryId: number | undefined , isDiscount: boolean, isHappyHour: boolean = false){
+  selectcategory(categoryId: number | undefined , discount: boolean, isHappyHour: boolean = false){
     this.currentCategoryId = categoryId;
-    this.currentIsDiscount = isDiscount;
+    this.currentIsDiscount = discount;
     this.currentIsHappyHour = isHappyHour
 
     let filtered = this.allProducts;
@@ -120,8 +120,8 @@ export class Menu implements OnInit{
       filtered = filtered.filter(p => p.categoryId === categoryId);
     }
 
-    if (isDiscount) {
-      filtered = filtered.filter(p => p.isDiscount || p.isDiscount > 0); 
+    if (discount) {
+      filtered = filtered.filter(p => p.discount || p.discount > 0); 
     }
 
     if (isHappyHour) {
@@ -162,7 +162,7 @@ export class Menu implements OnInit{
     addNewProduct() {
       if (this.isOwner) {
         this.productToEdit = null;
-        this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined, descuento: 0, happyHour:false };
+        this.nuevoProducto = { nombre: '', precio: 0, categoryId: undefined, discount: 0, happyHour:false };
         this.showProductForm = true;
         
     }
@@ -176,7 +176,7 @@ export class Menu implements OnInit{
         nombre: product.name, 
         precio: product.price, 
         categoryId: product.categoryId,
-        descuento: product.isDiscount || 0,
+        discount: product.discount || 0,
         happyHour: product.isHappyHour || false
       };
       this.showProductForm = true;
@@ -217,8 +217,8 @@ export class Menu implements OnInit{
       idProductoFinalizado = productoCreado.id;
     }
 
-    const nuevoDescuento = this.nuevoProducto.descuento || 0;
-    const descuentoAnterior = this.productToEdit?.isDiscount || 0;
+    const nuevoDescuento = this.nuevoProducto.discount || 0;
+    const descuentoAnterior = this.productToEdit?.discount || 0;
 
     if(nuevoDescuento > 0 || nuevoDescuento !== descuentoAnterior) {
       await this.inProduct.updateProductDiscount(idProductoFinalizado, nuevoDescuento);
@@ -241,7 +241,7 @@ export class Menu implements OnInit{
       nombre: '', 
       precio: 0, 
       categoryId: undefined, 
-      descuento: 0, 
+      discount: 0, 
       happyHour: false 
     };
 

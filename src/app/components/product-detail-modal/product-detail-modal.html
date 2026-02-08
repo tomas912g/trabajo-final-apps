@@ -10,7 +10,7 @@
         <h2 class="card-title fw-bold mb-2">{{product().name}}</h2>
         <p class="card-text text-muted mb-4">{{product().description}}</p>
         <div class="price-container">
-            @if (tieneDescuentoOHh() && product().isDiscount) {
+            @if (tieneDescuentoOHh() && product().discount) {
                 <div class = "d-flex align-items-center gap-2">
                 <span class="text-decoration-line-through text-muted fs-5">
                 {{ product().price | currency:'ARS':'symbol':'1.0-0' }}

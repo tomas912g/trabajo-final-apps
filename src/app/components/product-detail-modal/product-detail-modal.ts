@@ -17,12 +17,12 @@ export class ProductDetailModal {
   readonly esHappyHour = computed(() => !!this.product().isHappyHour);
   
   readonly tieneDescuentoOHh = computed(
-    () => this.esHappyHour() || this.#porcentaje(this.product().isDiscount) > 0
+    () => this.esHappyHour() || this.#porcentaje(this.product().discount) > 0
   );
   
   readonly precioActual = computed(() => {
     const p = this.product();
-    const porc = this.#porcentaje(p.isDiscount);
+    const porc = this.#porcentaje(p.discount);
     if (porc > 0) {
       const precio = p.price * (1 - porc / 100);
       return Math.max(0, Math.round(precio * 100) / 100);

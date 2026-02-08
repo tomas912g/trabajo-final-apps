@@ -7,7 +7,7 @@
         categoryName?: string,
         imageUrl?: string,
         isFeatured: boolean, 
-        isDiscount: number, 
+        discount: number, 
         discountValidUntil?: string | Date; 
         isHappyHour: boolean,
         isFavorite?: boolean;

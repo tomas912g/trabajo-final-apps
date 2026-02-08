@@ -10,7 +10,7 @@
         </p>
         
       <p class="card-text m-0">
-      @if (tieneDescuentoOHh() && product().isDiscount) { 
+      @if (tieneDescuentoOHh() && product().discount) { 
         <small class="text-decoration-line-through text-muted me-2">
           {{ product().price | currency:'ARS':'symbol':'1.0-0' }}
         </small>
