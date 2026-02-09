@@ -65,7 +65,7 @@ export class ProductsService {
     const res = await fetch(`${this.URL_BASE}/products/${productId}/discount`, { 
       method: "PUT",
       headers: this.authService.getAuthHeaders(),
-      body: JSON.stringify({isDiscount: discount})
+      body: JSON.stringify({discount: discount})
     });
     if (!res.ok) throw new Error("Error al modificar el producto");
   }
