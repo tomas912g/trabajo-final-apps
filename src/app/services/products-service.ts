@@ -10,7 +10,6 @@ export class ProductsService {
   readonly URL_BASE = "https://w370351.ferozo.com/api";
   authService = inject(AuthService);
 
-
   async getProductsByRestaurant(
     userId : number, categoryId? : number, onylDiscount: boolean = false ): Promise<Product[]> {
     let url =`${this.URL_BASE}/users/${userId}/products`;
