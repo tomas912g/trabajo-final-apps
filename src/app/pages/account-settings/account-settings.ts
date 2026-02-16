@@ -62,7 +62,7 @@ async loadAccountData(): Promise<void> {
       restaurantName: [user.restaurantName, Validators.required],
       address: [user.address, Validators.required],
       phoneNumber: [user.phoneNumber, Validators.required],
-      Password: [''], // inicia vacio porque el usuario decide si cambiarla o no
+      password: [''], // inicia vacio porque el usuario decide si cambiarla o no
     });
   }
 
