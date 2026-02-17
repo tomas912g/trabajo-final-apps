@@ -81,7 +81,7 @@ export class AuthService {
       if (this.token) {
         try { 
           const claims = this.parseJwt(this.token); // convertimos el string encriptado en un JSON legible
-          if (claims.exp && (new Date (claims.exp * 1000) < new Date())){ // Compara si la fecha de vencimiento (claim.exp) del token (pasada a milisegundos) es anterior al momento actual(newDate), lo que significa que ya venció.
+          if (claims.exp && (new Date (claims.exp * 1000) < new Date())){ // valida si la fecha de vencimiento es menor a la actual
           this.logout(); // si se cumple la condicion (token vencido) forzamos el logout
       }
         } catch (e){

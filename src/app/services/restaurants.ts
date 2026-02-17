@@ -18,12 +18,10 @@ export class RestaurantService {
 
 async toggleRestaurantFavorite(restaurantId: number): Promise<void> { // Recibe el id del restaurante a marcar fav como parametro
     const url = `https://w370351.ferozo.com/api/restaurants/${restaurantId}/favorite`; // construimos la URL para los restaurants
-
     const res = await fetch(url, { // hacemos la peticion al servidor
         method: "PUT", 
         headers: this.authService.getAuthHeaders(),
-    });
-    
+    }); 
     if (!res.ok) {
         throw new Error("Error al cambiar el estado de favorito del restaurante.");
     }

@@ -69,7 +69,7 @@ export class AdminProducts implements OnInit{
       const productoLocal = this.myProduct.find(p => p.id === id);//busca el producto en la lista local para actualizar su valor visualmente
       if (productoLocal) {
         productoLocal.discount = newDiscount;//asigna el descuento al producto
-        this.myProduct = [...this.myProduct];//actauliza la referencia del array para que se vea el cambio en la vista
+        this.myProduct = [...this.myProduct];//actualiza la referencia del array para que se vea el cambio en la vista
         //los "..." modifican la lista sin cambiar los datos originales
       }
       alert("Descuento actualizado");

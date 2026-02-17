@@ -10,7 +10,7 @@ export class UsersService {
   authService = inject(AuthService);
   readonly URL_BASE = 'https://w370351.ferozo.com/api/users';
   
-  async register(registerData: NewUser) { // reccibe registerdata (datos del nuevo usuario)
+  async register(registerData: NewUser) { // reccibe register data (datos del nuevo usuario)
     const res = await fetch(this.URL_BASE, // hacemos el fetch a la URL y le enviamos la peticion
     { 
       method: "POST", 

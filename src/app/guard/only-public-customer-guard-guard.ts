@@ -7,7 +7,7 @@ export const publicCostumerGuard: CanActivateFn = (route, state) => { // recibe 
     const authService = inject(AuthService); // Para revisar token
     const router = inject(Router); // Para redirigir si es necesario
 
-    if(authService.token){ // Se ejecuta si hay token
+    if(authService.token){
       const newPath = router.parseUrl("/restaurantList"); // si esta logueado preparamos su nueva ruta a restaurantList
       return new RedirectCommand(newPath, { // en lugar de devolver false usamos una devolucion de objeto de comando
         replaceUrl: true, // reemplaza la entrada actual por la del nuevo camino al que tiene que ir, evitando que al ir atras vaya al login

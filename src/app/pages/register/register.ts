@@ -41,8 +41,6 @@ export class Register {
     
     // creamos el paquete de datos payload con todos los datos que necesita guardar el back
     const payload: NewUser = { firstName, lastName, email: fakeEmail, password, restaurantName, address, phoneNumber };
-    console.log("enviando payload", payload);
-
     const res = await this.usersService.register(payload); // llamamos al servicio y le pasamos la funcion register (method: POST)
 
     if (res?.ok || res?.id) { // si cualquiera de las respuestas es true pasa

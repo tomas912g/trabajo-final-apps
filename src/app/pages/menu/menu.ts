@@ -128,7 +128,7 @@ export class Menu implements OnInit{
       filtered = filtered.filter(p => p.isHappyHour === true);
     }
 
-    this.menu = filtered;//ctualiza la vista del menú con el resultado final de todos los filtros aplicados
+    this.menu = filtered;//actualiza la vista del menú con el resultado final de todos los filtros aplicados
   }
 
     addCategory() {
@@ -176,7 +176,6 @@ export class Menu implements OnInit{
 
   openEditProduct(product: Product) {
     if (this.isOwner) {
-      console.log("Editando producto:", product);
       this.productToEdit = product;//guarda la referencia del producto original que estamos editando
       this.nuevoProducto = {//rellena el formulario con los datos del producto que vamos a editar
         nombre: product.name, 

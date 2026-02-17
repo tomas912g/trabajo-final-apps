@@ -54,7 +54,7 @@ async loadAccountData(): Promise<void> {
     }
 }
 
-// pega los datos que legan del usuario dentro del formulario
+// pega los datos que llegan del usuario dentro del formulario
   initForm(user: User) {
     this.editForm = this.fb.group({ //crea el grupo de requerimientos del formulario y asigna valores y reglas
       firstName: [user.firstName, Validators.required],

@@ -49,7 +49,7 @@ export class CategoriesFormComponent implements OnInit {
         await this.categoriesService.createCategory(this.categoryData);
         alert('Categoria creada'); // respuesta simple
       }
-      } catch (error) { // maneja erro
+      } catch (error) { // maneja error
       alert('Error al guardar la categoría.');
     }
   }
