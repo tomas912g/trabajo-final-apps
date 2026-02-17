@@ -27,7 +27,7 @@ export class AccountSettingsComponent implements OnInit {
   isLoading = true;
   error: string | null = null; //guarda el mensaje de error si falla
 
-  private swalWithBootstrapButtons = Swal.mixin({
+  private swalWithBootstrapButtons = Swal.mixin({ // configuracion para alertas de sweetalert con diseño de bootstrap
     customClass: {
       confirmButton: "btn btn-success me-2",
       cancelButton: "btn btn-danger"
@@ -70,14 +70,14 @@ async loadAccountData(): Promise<void> {
 async onUpdateAccount(): Promise<void> {
     if (this.editForm.invalid) return;// si el formulario tiene errores frena el metodo 
     this.isLoading = true;
-    const formValues = this.editForm.getRawValue();
-    const changes: Partial<NewUser> ={ ...formValues };; //extrae todos los valores actuales del formulario
+    const formValues = this.editForm.getRawValue(); // extrae todos los datos que hay escritos en el formulario y los guarda en la variable formValues
+    const changes: Partial<NewUser> ={ ...formValues };; //crea un objeto clon con los valores extraidos en formValues para no manipular el real
     if (!changes.password) {
         delete changes.password; // Borramos el campo si está vacío
     }
 
     const userId = this.authService.currentUserId;//guarda el ID del usuario logeado para saber a quien cambiar
-    if (!userId) return;
+    if (!userId) return; // si no existe el ID frena el metodo
     try {
       await this.usersService.userProfileUpdate(userId, changes); //llama al servicio para enviar los cambios
       // Alerta  de Éxito
@@ -87,7 +87,7 @@ async onUpdateAccount(): Promise<void> {
         icon: "success"
       });
     } catch (e) {
-      console.error(e);
+      // Alerta de error
         this.swalWithBootstrapButtons.fire({
         title: "Error",
         text: "No se pudieron guardar los cambios",
@@ -101,7 +101,8 @@ async onUpdateAccount(): Promise<void> {
 async onDeleteAccount(): Promise<void> {
   const userId = this.authService.currentUserId;//guarda el ID actual para saber que usario eliminar
   if (!userId) return;// si no existe el ID frena el metodo
-  const result = await this.swalWithBootstrapButtons.fire({
+  // alerta de confirmacion bloqueante
+  const result = await this.swalWithBootstrapButtons.fire({ // detengo la ejecucion del codigo con await hasta obtener una respuesta
       title: "¿Estás seguro?",
       text: "No podrás revertir esto y perderás tu menú.",
       icon: "warning",
@@ -113,22 +114,23 @@ async onDeleteAccount(): Promise<void> {
     if (result.isConfirmed) {
       this.isLoading = true;
       try {
-          await this.usersService.deleteUserProfile(userId);
+          await this.usersService.deleteUserProfile(userId); // llama al metodo para eliminar el id del usuario
           localStorage.clear(); // Limpiar sesión
-          
+          // alerta de exito
           await this.swalWithBootstrapButtons.fire({
              title: "¡Eliminado!",
              text: "Tu cuenta ha sido borrada.",
              icon: "success"
            });
-           this.router.navigate(['/login']);
+           this.router.navigate(['/login']); // redirige a login
     } catch (e) {
+      // alerta de error
             this.swalWithBootstrapButtons.fire({
                 title: "Error",
                 text: "No se pudo eliminar la cuenta",
                 icon: "error"
               });
-            this.isLoading = false;
+            this.isLoading = false; // frena el spinner
         }
       }
     }
