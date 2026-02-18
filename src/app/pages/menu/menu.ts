@@ -151,7 +151,6 @@ export class Menu implements OnInit{
       if (confirmar) {
         try {
           await this.categoriesService.deleteCategory(categoryId)//llama al servicio para eliminar la categoria
-          console.log('Categoría eliminada:', categoryId);
           await this.loadMenuinitial();//recarga el menu para actualizar la lista de categorias
           alert("Categoría eliminada con éxito");
         } catch (error) {  
@@ -175,8 +174,7 @@ export class Menu implements OnInit{
   }
 
   openEditProduct(product: Product) {
-    if (this.isOwner) {
-      console.log("Editando producto:", product);
+    if (this.isOwner) {;
       this.productToEdit = product;//guarda la referencia del producto original que estamos editando
       this.nuevoProducto = {//rellena el formulario con los datos del producto que vamos a editar
         nombre: product.name, 
