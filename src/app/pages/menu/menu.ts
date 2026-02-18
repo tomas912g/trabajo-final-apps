@@ -128,7 +128,7 @@ export class Menu implements OnInit{
       filtered = filtered.filter(p => p.isHappyHour === true);
     }
 
-    this.menu = filtered;//actualiza la vista del menú con el resultado final de todos los filtros aplicados
+    this.menu = filtered;//ctualiza la vista del menú con el resultado final de todos los filtros aplicados
   }
 
     addCategory() {
@@ -176,6 +176,7 @@ export class Menu implements OnInit{
 
   openEditProduct(product: Product) {
     if (this.isOwner) {
+      console.log("Editando producto:", product);
       this.productToEdit = product;//guarda la referencia del producto original que estamos editando
       this.nuevoProducto = {//rellena el formulario con los datos del producto que vamos a editar
         nombre: product.name, 
@@ -224,7 +225,7 @@ export class Menu implements OnInit{
     }
 
     const nuevoDescuento = this.nuevoProducto.discount || 0;
-    const descuentoAnterior = this.productToEdit?.discount || 0;
+    const descuentoAnterior = this.productToEdit?.discount || 0; // gracias al signo de pregunta se asegura primero que el profuctoedit exista y luego busca el discount
     //comparamos el descuento nuevo con el que tenia antes
     if(nuevoDescuento > 0 || nuevoDescuento !== descuentoAnterior) {//si el valor cambio o es positivo, actualizamos el descuento en el servidor
       await this.inProduct.updateProductDiscount(idProductoFinalizado, nuevoDescuento);
@@ -237,7 +238,7 @@ export class Menu implements OnInit{
       await this.inProduct.alternateHappyHour(idProductoFinalizado);
       }
 
-    alert(this.productToEdit ? "Producto actualizado correctamente" : "Producto creado correctamente");
+    alert(this.productToEdit ? "Producto actualizado correctamente" : "Producto creado correctamente");// La estructura es: Condición ? Valor_Si_Es_Verdad : Valor_Si_Es_Falso, reemplaza al if
     //cierra el formulario y limpia todos los campos
     this.showProductForm = false;
     this.productToEdit = null;
@@ -252,9 +253,7 @@ export class Menu implements OnInit{
     };
     //carga el menú completo para mostrar los cambios reflejados en la interfaz
     await this.loadMenuinitial();
-
     } catch (error) {
-    console.error("detalle del error:", error);
     alert("No se pudo guardar el producto.");
   }
 }
@@ -263,15 +262,12 @@ export class Menu implements OnInit{
     if (!this.isOwner) return;
     if (confirm("¿Eliminar este producto?")) {
       try {
-      console.log("Borrando ID:", productId); 
       //manda la peticion de borrado al servicio de productos     
       await this.inProduct.deleteProduct(productId);
       //recarga el menu para reflejar los cambios
       await this.loadMenuinitial(); 
-      
       alert("Producto eliminado.");
     } catch (error) {
-      console.error("Error al eliminar:", error);
       alert("No se pudo eliminar el producto.");
     }
     }
@@ -282,7 +278,6 @@ export class Menu implements OnInit{
         const user = await this.userService.getUserProfile(this.restaurantId);//pide al userService info del perfil del restauante actual
         this.restaurantName = user.restaurantName;//extrae el nombre del restaurant
       } catch (error){
-        console.error("Error cargando la info del restaurante:", error);
         this.restaurantName = "Restaurante";
       }
   }
@@ -297,12 +292,11 @@ export class Menu implements OnInit{
         this.currentIsDiscount,
       );
       if (this.currentIsHappyHour) {//si tiene happy Hour, lo filtra localmente
-        products = products.filter(p => p.isHappyHour === true);
+        products = products.filter(p => p.isHappyHour === true); // con filter recorre uno por uno los productos y solicita que filtre los que tienen happyhour en true
     }
     //actualiza la lista de productos que se muestra en la pantalla
     this.menu = products;
   } catch (err) {
-    console.error("Error:", err);
   } finally {
     this.isLoading = false;
   }
